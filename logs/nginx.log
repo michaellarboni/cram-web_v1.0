@@ -1,0 +1,4 @@
+nginx: [emerg] unknown directive "lient_max_body_size" in /etc/nginx/sites-enabled/www.conf:5
+nginx: [emerg] unknown directive "lient_max_body_size" in /etc/nginx/sites-enabled/www.conf:5
+nginx: [emerg] unknown directive "lient_max_body_size" in /etc/nginx/sites-enabled/www.conf:5
+nginx: [emerg] unknown directive "lient_max_body_size" in /etc/nginx/sites-enabled/www.conf:5

@@ -1,0 +1,11 @@
+cramlamfr:
+  image: cram_lam_fr:latest
+  volumes:
+    - ./src:/home/ftp/fr/lam/cram/html
+    - ./logs:/home/ftp/fr/lam/cram/logs
+    - ./conf/supervisor/conf.d:/etc/supervisor/conf.d
+    - ./conf/nginx:/etc/nginx
+    - ./conf/php5:/etc/php5
+    - ./conf/ldap:/etc/ldap
+  ports:
+    - 80:80

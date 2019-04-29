@@ -1,0 +1,17 @@
+[24-Aug-2015 11:59:44] NOTICE: PHP message: PHP Warning:  PHP Startup: Unable to load dynamic library '/usr/lib/php5/20131226/php_ldap.so' - /usr/lib/php5/20131226/php_ldap.so: cannot open shared object file: No such file or directory in Unknown on line 0
+[24-Aug-2015 12:01:53] NOTICE: PHP message: PHP Warning:  PHP Startup: Unable to load dynamic library '/usr/lib/php5/20131226/php_ldap.so' - /usr/lib/php5/20131226/php_ldap.so: cannot open shared object file: No such file or directory in Unknown on line 0
+Failed loading ./opcache.so:  ./opcache.so: cannot open shared object file: No such file or directory
+[24-Aug-2015 14:25:32] NOTICE: PHP message: PHP Warning:  PHP Startup: Unable to load dynamic library './pdo.so' - ./pdo.so: cannot open shared object file: No such file or directory in Unknown on line 0
+[24-Aug-2015 14:25:32] NOTICE: PHP message: PHP Warning:  PHP Startup: Unable to load dynamic library './apcu.so' - ./apcu.so: cannot open shared object file: No such file or directory in Unknown on line 0
+[24-Aug-2015 14:25:32] NOTICE: PHP message: PHP Warning:  PHP Startup: Unable to load dynamic library './curl.so' - ./curl.so: cannot open shared object file: No such file or directory in Unknown on line 0
+[24-Aug-2015 14:25:32] NOTICE: PHP message: PHP Warning:  PHP Startup: Unable to load dynamic library './gd.so' - ./gd.so: cannot open shared object file: No such file or directory in Unknown on line 0
+[24-Aug-2015 14:25:32] NOTICE: PHP message: PHP Warning:  PHP Startup: Unable to load dynamic library './imagick.so' - ./imagick.so: cannot open shared object file: No such file or directory in Unknown on line 0
+[24-Aug-2015 14:25:32] NOTICE: PHP message: PHP Warning:  PHP Startup: Unable to load dynamic library './intl.so' - ./intl.so: cannot open shared object file: No such file or directory in Unknown on line 0
+[24-Aug-2015 14:25:32] NOTICE: PHP message: PHP Warning:  PHP Startup: Unable to load dynamic library './json.so' - ./json.so: cannot open shared object file: No such file or directory in Unknown on line 0
+[24-Aug-2015 14:25:32] NOTICE: PHP message: PHP Warning:  PHP Startup: Unable to load dynamic library './php_ldap.so' - ./php_ldap.so: cannot open shared object file: No such file or directory in Unknown on line 0
+[24-Aug-2015 14:25:32] NOTICE: PHP message: PHP Warning:  PHP Startup: Unable to load dynamic library './mcrypt.so' - ./mcrypt.so: cannot open shared object file: No such file or directory in Unknown on line 0
+[24-Aug-2015 14:25:32] NOTICE: PHP message: PHP Warning:  PHP Startup: Unable to load dynamic library './mysql.so' - ./mysql.so: cannot open shared object file: No such file or directory in Unknown on line 0
+[24-Aug-2015 14:25:32] NOTICE: PHP message: PHP Warning:  PHP Startup: Unable to load dynamic library './mysqli.so' - ./mysqli.so: cannot open shared object file: No such file or directory in Unknown on line 0
+[24-Aug-2015 14:25:32] NOTICE: PHP message: PHP Warning:  PHP Startup: Unable to load dynamic library './pdo_mysql.so' - ./pdo_mysql.so: cannot open shared object file: No such file or directory in Unknown on line 0
+[24-Aug-2015 14:25:32] NOTICE: PHP message: PHP Warning:  PHP Startup: Unable to load dynamic library './pdo_pgsql.so' - ./pdo_pgsql.so: cannot open shared object file: No such file or directory in Unknown on line 0
+[24-Aug-2015 14:25:32] NOTICE: PHP message: PHP Warning:  PHP Startup: Unable to load dynamic library './readline.so' - ./readline.so: cannot open shared object file: No such file or directory in Unknown on line 0
