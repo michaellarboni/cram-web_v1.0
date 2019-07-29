@@ -1,0 +1,13 @@
+{
+  "name": "jquery.form",
+  "homepage": "https://github.com/malsup/form",
+  "_release": "v3.19",
+  "_resolution": {
+    "type": "tag",
+    "tag": "v3.19",
+    "commit": "caae21b0c02f83039adf1fa561f9e4a5d58d5c79"
+  },
+  "_source": "https://github.com/malsup/form.git",
+  "_target": "v3.19",
+  "_originalSource": "https://github.com/malsup/form.git"
+}
