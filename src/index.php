@@ -4,6 +4,7 @@ include ('include/head.php');
 ?>
 <body>
     <center>
+        <h2>Cram-web</h2>
         <form class="well " method="post" action="include/authentification.php">
             <?php
             //On vérifie s'il y a des erreurs (en cas d'échec de connexion)

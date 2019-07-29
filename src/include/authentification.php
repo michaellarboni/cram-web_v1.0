@@ -3,8 +3,31 @@ include_once 'connexion.php';
 session_start();
 $_SESSION['lang'] = $_POST['language'];
 
-if ($_POST['user'] != null && $_POST['pwd'] != null) 
-{
+if ($_POST['user'] != null && $_POST['pwd'] != null) {
+    include_once ("/include/head.php");
+
+// eviter le controle du ldap
+    $id = $_POST['user'];
+    $user = PdoBdd::connexionBDD($id);
+
+    $_SESSION['id'] = $user['id'];
+    $_SESSION['username'] = $user['username'];
+    if (isset($_SESSION['id'])) {
+        header("Location: ../myTasksManagement.php");
+    }else {
+        header("Location: ../index.php?erreur=autorisation");
+    }
+        
+}else {
+    header("Location: ../index.php?erreur=champs");
+}
+
+
+
+
+// ----------------------- verif sur le serveur LDAP ------------
+
+/*
     include_once ("/include/head.php");
     $id=$_POST['user'];
     // Eléments d'authentification LDAP
@@ -13,7 +36,7 @@ if ($_POST['user'] != null && $_POST['pwd'] != null)
 
     // Connexion au serveur LDAP
     $ldapconn = ldap_connect("ldaps://ldap-pytheas.oamp.fr:636") /*ldap_connect("ldaps://ldap-pytheas.oamp.fr:636")*/
-        or die("Impossible de se connecter au serveur LDAP.");
+/*        or die("Impossible de se connecter au serveur LDAP.");
 
     if ($ldapconn)
     {
@@ -46,6 +69,6 @@ else
     header("Location: ../index.php?erreur=champs");
 }
 
-
+*/
 
 ?>

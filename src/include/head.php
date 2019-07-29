@@ -2,25 +2,13 @@
 session_start();
 require "include/connexion.php";
 $pdo = PdoBdd::getPdoBdd();
-
-if (!isset($_SESSION['lang'])) { //si il n'y a pas encore de variable session langue (l'utilisateur n'a pas choisi)
-    if (isset($HTTP_ACCEPT_LANGUAGE)) {
-        $Langue = explode(",", $HTTP_ACCEPT_LANGUAGE);
-        $Langue = strtolower(substr(chop($Langue[0]), 0, 2));
-    } else {
-        $Langue == 'fr'; //le français est la langue par défaut
-    }
-} else {
-    $Langue = $_SESSION['lang'];
-}
+include 'langues.php';
 ?>
-<html>
+
     <head>
         <meta charset="utf-8">
-        <title>Cram</title>
-
+        <title>Cram-Web</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
         <!--Tous les includes nécessaire-->
         <link href="./public/css/bootstrap.css" rel="stylesheet" type="text/css">
         <link href="./public/css/bootstrap-responsive.css" rel="stylesheet" type="text/css">
@@ -43,12 +31,11 @@ if (!isset($_SESSION['lang'])) { //si il n'y a pas encore de variable session la
         <script src='./public/libs/jquery-ui/ui/minified/jquery-ui.min.js'></script>
         <script src='./public/libs/moment/min/moment.min.js'></script>
         <script src='./public/libs/fullcalendar/dist/fullcalendar.min.js'></script>
-        <script src="./public/libs/bootstrap/docs/assets/js/bootstrap.js"></script>
+        <script src='./public/libs/bootstrap/docs/assets/js/bootstrap.js'></script>
         <script src='./public/libs/fancybox/source/jquery.fancybox.pack.js?v=2.1.5'></script>
         <script src='./public/libs/jquery.form/jquery.form.js'></script>
-        
     </head>
-</html>
+
 
 
 

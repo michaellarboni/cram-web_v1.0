@@ -11,6 +11,8 @@ $projet = $_GET['projet'];
 $activite = $_GET['activite'];
 $commentaire = $_GET['commentaire'];
 $off = $_GET['off'];
+
+echo'<script> alert("coucou") </script>';
 if ($off == "TRUE")
 {
     $projet = null;

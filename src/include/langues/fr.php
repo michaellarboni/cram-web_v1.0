@@ -38,6 +38,11 @@
  $myactivities = "Mes activités";
  $otheractivities = "Autres activités";
  
+//*choix reporting */
+$reporting = "Statistique";
+$reportingLeader = 'Statistique chef de service';
+$reportingManager = 'Statistique chef de projet'; 
+
  /*Les erreurs*/
  $noProject = "Choisissez un projet ! ";
  $noActivity = "Choisissez une activité ! ";

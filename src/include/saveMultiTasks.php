@@ -14,16 +14,25 @@ $activity   = $_POST['activity'];
 $holiday    = (isset($_POST["holiday"]))?"TRUE":"FALSE";
 $dates      = $_POST['dates'];
 $action     = $_POST['action'];
+$next       = $_POST['save_next'];
+$previous   = $_POST['save_previous'];
 
-
-if(count($dates) > 0){
-    foreach($dates as $d){
-        $date = new \DateTime($d);
-        $part = ($date->format('H') == 8)?"am":"pm";
-        
-        if($action=="add"){
-            PdoBdd::saveTask($_SESSION['id'], $date->format('Y-m-d'), $part, $holiday, $projet, $activity, $comment);
+if (!isset($next)) {
+    $next = "";
+}
+if (!isset($previous)) {
+ 
+    $previous="";
+}
+    if(count($dates) > 0){
+        foreach($dates as $d){
+            $date = new \DateTime($d);
+            $part = ($date->format('H') == 8)?"am":"pm";
+            
+            if($action=="add"){
+                PdoBdd::saveTask($_SESSION['id'], $date->format('Y-m-d'), $part, $holiday, $projet, $activity, $comment);
+            }
         }
     }
-}
+
 ?>

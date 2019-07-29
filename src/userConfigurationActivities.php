@@ -75,7 +75,7 @@ if (!isset ($_SESSION['id']))
         <nav class="navbar navbar-inner">
               <div class="container">
                   <p class="navbar-text pull-right">
-                      Logged in as <a href="include/deconnexion.php" title="Logout" class="navbar-link"><b><?php echo $_SESSION['username']; ?> <i class="icon-black icon-off"></i></b></a>
+                      Logout <a href="include/deconnexion.php" title="Logout" class="navbar-link"><b><?php echo $_SESSION['username']; ?> <i class="icon-black icon-off"></i></b></a>
                     </p>
                 <ul class="nav">
                   <?php

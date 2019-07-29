@@ -33,7 +33,12 @@
  $otherprojects = "Other projects";
  $myactivities = "My activities";
  $otheractivities = "Other activities";
- 
+
+/*choix reporting */
+$reporting = "Reporting";
+$reportingLeader = 'Reporting Leader';
+$reportingManager = 'Reporting Manager'; 
+
 /*Errors*/
  $noProject = "Choose one project ! ";
  $noActivity = "Choose one activity ! ";
