@@ -1,0 +1,64 @@
+.navbardiv {
+    overflow: hidden;
+    /*background-color: #333;*/
+    background-color: #3781a6;
+    padding: 0 50px;
+}
+
+.navbardiv a {
+    float: left;
+    font-size: 20px;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-weight: 400;
+}
+
+.dropdowndiv {
+    float: left;
+    overflow: hidden;
+}
+
+.dropdowndiv .dropbtn {
+    font-size: 20px;
+    border: none;
+    outline: none;
+    color: white;
+    padding: 14px 16px;
+    background-color: inherit;
+    font-family: inherit;
+    margin: 0;
+    letter-spacing: 1px;
+    font-weight: 400;
+}
+
+.navbardiv a:hover, .dropdowndiv:hover .dropbtn {
+    background-color: #5390bc;
+}
+
+.dropdowndiv-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 2;
+}
+
+.dropdowndiv-content a {
+    float: none;
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+
+.dropdowndiv-content a:hover {
+    background-color: #ddd;
+}
+
+.dropdowndiv:hover .dropdowndiv-content {
+    display: block;
+}

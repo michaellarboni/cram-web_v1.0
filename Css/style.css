@@ -1,0 +1,86 @@
+/*
+
+    Created on : 25 août 2015, 13:30:18
+    Author     : Anthony K GROSS <anthony.k.gross@gmail.com>
+*/
+
+body {
+    font-family: "Roboto",sans-serif;
+    font-weight: 300;
+}
+
+.fc-event{
+    box-sizing: border-box;
+    padding: 10px;
+}
+
+.fc-state-highlight{
+    background: #999;
+}
+
+.fc-event.ui-selected{
+    background-color: #F39814 !important;
+}
+
+.fc-event.ui-selecting{
+    background-color: #FECA40 !important;
+}
+.ui-selectable-helper {
+    position: absolute;
+    z-index: 100;
+    border: 1px dotted black;
+}
+
+#dialog-form{
+    display: none;
+}
+
+.fc-event.fc-disabled{
+    background-color: #fff;
+}
+.fc-event div{
+    color: #fff;
+}
+.fc-event.fc-disabled div{
+    color: #333;
+}
+
+.fc-event.cram-holiday{
+    background-color: #46a546;
+}
+
+#myform label{
+    font-weight: bold;
+}
+#myform select, #myform textarea {
+    width: 100%;
+}
+
+#myform textarea {
+    min-height: 150px;
+}
+
+.bg-filigran
+{
+    background: rgba(18, 21, 27, 0.5);
+}
+
+.nav-link{
+    font-size: 18px;
+}
+
+#calendar{
+    margin-top: 10px;
+}
+
+.table-adminProjects{
+    max-width: 1300px;
+}
+
+.table-adminActivities, .table-adminUsers{
+    max-width: 1200px;
+}
+.hidden{
+    /*display: none;*/
+    visibility: hidden;
+}

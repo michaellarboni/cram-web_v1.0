@@ -1,0 +1,19 @@
+@charset "UTF-8";
+/**
+ * Fichier CSS
+ * Fichier maître pour assembler tous les fichiers css
+ * @author Michael Larboni
+ * @version 1.0
+ */
+
+@import "bootstrap.css";
+@import "bootstrap-reboot.css";
+@import "bootstrap-grid.css";
+@import "bootstrap-social.css";
+@import "normalize.css";
+@import "table_users.css";
+@import "toggle.css";
+@import "signin.css";
+@import "bootstrap-directional-buttons.css";
+@import "menu.css";
+@import "style.css";
