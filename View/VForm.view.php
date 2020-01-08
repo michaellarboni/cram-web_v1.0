@@ -1,12 +1,12 @@
 <?php
 /**
  * Fichier de classe de type Vue
- * pour l'affichage du formulaire de connexion
+ * pour l'affichage du formulaire de connexion et d'inscription
  */
-class VAdmin
+class VForm
 {
     /**
-    * Constructeur de la classe VAdmin
+    * Constructeur de la classe VForm
     * @access public
     *
     * @return void
@@ -15,7 +15,7 @@ class VAdmin
     public function __destruct(){}
 
     /**
-     * Affichage du formulaire de connexion
+     * Affichage du formulaire de connexion et d'inscription
      * @access public
      *
      * @param $erreur
@@ -28,27 +28,26 @@ class VAdmin
         //tableau de langue associé
         $lang = $mlanguage->arrayLang();
 
-        if (isset($_SESSION['LANGUAGE']))
-            {
+        if (isset($_SESSION['LANGUAGE'])) {
                 $checkedFR = ($_SESSION['LANGUAGE'] == 'fr') ? 'checked' : '' ;
                 $checkedEN = ($_SESSION['LANGUAGE'] == 'en') ? 'checked' : '' ;
-            }
+        }
         else{
             $checkedFR = 'checked';
             $checkedEN = '';
         }
 
-        // liens pour les actions des formulaires
-        $actionConnexion = '../Php/index.php?EX=connect';
+        // actions des formulaires
+        $actionConnexion = '../Php/index.php?EX=ldap';
         $actionRegister  = '../Php/index.php?EX=inscription';
 
         $connect      = $lang['connect'];
         $signIn       = $lang['signIn'];
         $user         = $lang['user'];
         $password     = $lang['password'];
-        $forgotPwd    = $lang['forgotPwd'];
+        $help         = $lang['help'];
         $enterCaptcha = $lang['enterCaptcha'];
-
+        $class        = ($erreur == $lang['securityCodeCorrect']) ? 'alert-info' : 'alert-danger';
 
         echo <<<HERE
 
@@ -58,7 +57,6 @@ class VAdmin
 
 <style>
 body {
-    /*padding-top: 150px;*/
     background:#e2e2e2 ;
 }
 .panel-login {
@@ -177,10 +175,6 @@ $(function() {
 		$(this).addClass('active');
 		e.preventDefault();
 	});
-    $('#forgotPassword').click(function(e) {
-		alert('Fonction non disponible');
-		e.preventDefault();
-	});	
     $('#inputEnglish').click(function() {
         window.location="../Php/index.php?EX=home&LANG=en";
     });
@@ -195,7 +189,7 @@ $(function() {
 <div class="container vertical-center">
     	<div class="row">
             <div class="panel panel-login container text-center col-xs-8 col-sm-10 col-md-7 col-lg-5">
-                <p class="container-fluid alert-danger">$erreur</p>
+                <h4 class="container-fluid $class">$erreur</h4>
                 <div class="panel-heading">
                     <div class="row">
                         <h2 class="col text-uppercase">CRAM-web</h2>
@@ -226,10 +220,10 @@ $(function() {
                                 <!-- Formulaire de connexion-->
 								<form id="login-form" action="$actionConnexion" method="post" style="display: block;">
 									<div class="form-group">
-										<input type="text" name="user" id="username" tabindex="1" class="form-control" placeholder="$user" value="" required>
+										<input type="text" name="username" tabindex="1" class="form-control" placeholder="$user" value="" required>
 									</div>
 									<div class="form-group">
-										<input type="password" name="pwd" id="password" tabindex="2" class="form-control" placeholder="$password" required>
+										<input type="password" name="userpwd" tabindex="2" class="form-control" placeholder="$password" required>
 									</div>
 									
 									<div class="form-group">
@@ -243,7 +237,7 @@ $(function() {
 										<div class="row">
 											<div class="col-lg-12">
 												<div class="text-center">
-													<a id="forgotPassword" href="#" tabindex="5" class="forgot-password">$forgotPwd</a>
+													<p tabindex="5" class="info">$help</p>
 												</div>
 											</div>
 										</div>
@@ -253,22 +247,22 @@ $(function() {
 								<!-- Formulaire d'inscription-->
 								<form id="register-form" action="$actionRegister" method="post" style="display: none;">
 									<div class="form-group">
-										<input type="text" name="username" id="inputUser" tabindex="1" class="form-control" placeholder="$user" value="" required>
+										<input type="text" name="username" tabindex="1" class="form-control" placeholder="$user" value="" required>
 									</div>
 									<div class="form-group">
-										<input type="password" name="userpwd" id="inputPassword" tabindex="2" class="form-control" placeholder="$password" required>
+										<input type="password" name="userpwd" tabindex="2" class="form-control" placeholder="$password" required>
 									</div>
 									<!-- <div class="form-group">
 										<input type="password" name="confirm-password" id="confirm-password" tabindex="2" class="form-control" placeholder="Confirm $password">
 									</div> -->
                                     <div class="form-group">
-										<input type="email" name="email" id="inputEmail" tabindex="1" class="form-control" placeholder="Email" value="" required>
+										<input type="email" name="email" id="inputEmail" tabindex="3" class="form-control" placeholder="Email" value="" required>
 									</div>
 									
-									<div class="row">
-									    <div class="col-12">
-                                            <input type="text" name="captcha_code"  maxlength="6" class="form-control" placeholder="$enterCaptcha" required>
-                                        </div>
+									<div class="form-group">
+                                        <input type="text" name="captcha_code" tabindex="4" maxlength="6" class="form-control" placeholder="$enterCaptcha" required>
+                                    </div>
+                                    <div class="row">    
                                         <div class="col-12">
                                             <div class="text-center">
                                                 <img id="captcha" src="../securimage/securimage_show.php" alt="CAPTCHA Image" />
@@ -290,6 +284,15 @@ $(function() {
 											</div>
 										</div>
 									</div>
+									<div class="form-group">
+										<div class="row">
+											<div class="col-lg-12">
+												<div class="text-center">
+													<p tabindex="5" class="info">$help</p>
+												</div>
+											</div>
+										</div>
+									</div>
 								</form>
 								
 							</div>
@@ -303,48 +306,4 @@ HERE;
 
     } // showForm
 
-    public function showInscription()
-    {
-        $musers = new MUsers();
-        include_once ('../securimage/securimage.php');
-        $securimage = new Securimage();
-
-        if ($securimage->check($_POST['captcha_code']) == false)
-        {
-            // code incorrect
-            $response =  'The security code entered was incorrect';
-        }
-
-        else {
-            $response = 'Inscription prise en compte, vous recevrez un email une fois validée';
-
-            // todo verifier si l'inscription provisoire est deja enregistré
-            // eviter les doublons
-
-            // données POST nécessaires a l'enregistrement provisoire
-            $value['username']    = $_POST['username'];
-            $value['userpwd']    = md5($_POST['userpwd']);
-            $value['email']       = $_POST['email'];
-            $value ['userstatut'] = 'pending';
-            $musers->setValue($value);
-            $musers->addUser();  //ajout provisoire dans la bdd
-        }
-
-        echo<<<HERE
-<div class="vertical-center container bg-success col-xs-10 col-sm-10 col-md-10 col-lg-6">
-    <div class="container text-center text-white">
-        <div class="">
-            <h2 class="text-center">$response</h2>
-        </div>
-        <div class="">
-            <p><a class="text-white" href="../Php/index.php">Retour</a></p>
-        </div>
-    </div>
-</div>
-
-HERE;
-
-    } //showInscription
-
-  
-} // VAdmin
+} // VForm
