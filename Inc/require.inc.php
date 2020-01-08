@@ -8,6 +8,7 @@
 
 // Debuggage
 define('DEBUG', true);
+define('LDAP', true);
 
 // Connexion Base de Données
 /*define('DATABASE', 'mysql:host=votre_host;dbname=nom_de_votre_base');
@@ -46,7 +47,7 @@ spl_autoload_register('my_autoloader');
  * Mise en forme des chaînes de caractères pour un tableau
  * @param array $val tableau de chaînes à convertir
  *
- * @return none
+ * @return void
  */
 function strip_xss(&$val)
 {
@@ -58,6 +59,7 @@ function strip_xss(&$val)
         // Si $val est une string, on filtre avec strip_tags()
         $val = strip_tags($val, '<strong>');
     }
+    return;
 
 } // strip_xss(&$val)
 
