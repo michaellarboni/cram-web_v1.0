@@ -5,7 +5,7 @@
  * @author Michael Larboni
  * @version 1.0
  */
-class MUsers  //extends MLang
+class MUsers
 {
     /**
      * Connexion à la Base de Données
@@ -29,12 +29,15 @@ class MUsers  //extends MLang
      * Constructeur de la class MUsers
      * @access public
      *
-     * @return void
+     * @param null $_id_user
      */
-    public function __construct()
+    public function __construct($_id_user = null)
     {
         // Connexion à la Base de Données
         $this->conn = new PDO(DATABASE, LOGIN, PASSWORD);
+
+        // Instanciation du membre $_id_user
+        $this->id_user = $_id_user;
 
     } // __construct()
 
@@ -89,7 +92,7 @@ class MUsers  //extends MLang
 
         $result = $this->conn->prepare($query);
 
-        $result->bindValue(':user', $this->value['user'], PDO::PARAM_INT);
+        $result->bindValue(':user', $this->id_user, PDO::PARAM_INT);
 
         $result->execute();
 
