@@ -13,13 +13,16 @@ require('../Inc/require.inc.php');
 session_name('cram-web');
 session_start();
 
+//objet language
+$mlanguage = new MLanguage(isset($_SESSION['LANGUAGE']) ? $_SESSION['LANGUAGE'] : 'fr' );
+//tableau de langue associé
+$lang = $mlanguage->arrayLang();
+
 // Variable de contrôle
 $EX = isset ($_REQUEST['EX']) ? $_REQUEST['EX'] : 'deconnexion';
 if(isset($_SESSION['AUTORISATION']) AND $_SESSION['AUTORISATION'] == 'erreur'){
     $EX = 'deconnexion';
 }
-
-//$_SESSION['LANGUAGE'] = isset($_REQUEST['LANG']) ? $_REQUEST['LANG'] : $_SESSION['LANGUAGE'];
 
 if (isset($_REQUEST['LANG'])){
     switch ($_REQUEST['LANG'])
@@ -37,7 +40,7 @@ switch ($EX)
 {
     case 'home'                        : home();                                  break;
 
-    case 'connect'                     : connect();                               break;
+    case 'ldap'                        : ldap();                                  break;
     case 'deconnexion'                 : deconnexion();                           break;
     case 'inscription'                 : inscription();                           break;
 
@@ -83,7 +86,7 @@ function home($erreur = '')
     global $content;
 
     $content ['title']  = 'Cram-Web';
-    $content ['class']  = 'VAdmin';
+    $content ['class']  = 'VForm';
     $content ['method'] = 'showForm';
     $content ['arg']    =  $erreur;
 
@@ -92,65 +95,99 @@ function home($erreur = '')
 } // home()
 
 /**
- * Vérification de la connexion
+ * Vérification sur le serveur LDAP
  *
  * @return void
  */
-function connect()
+function ldap()
 {
-    $musers   = new MUsers();
-    $value['user'] = isset($_POST['user']) ? $_POST['user'] : 'null' ;
-    $musers->setValue($value);
-    $result = $musers->VerifUser();
+    $username = isset($_POST['username']) ? $_POST['username'] : 'null' ;
 
-    $status['LEADER']  = $musers->leader ($result['userid']);
-    $status['MANAGER'] = $musers->manager($result['userid']);
+    // Eléments d'authentification LDAP
+    $ldapRdn  = 'uid=' . $username . ',ou=people,dc=pytheas,dc=fr';     // DN ou RDN LDAP
+    $ldapPass = $_POST['userpwd'];  // Mot de passe associé
+    //$ldapHostname = "ldaps://ldap.pytheas.univ-amu.fr";
+    $ldapHostname = "ldaps://ldap-c.osupytheas.fr";
+    $ldapPort = "636";
 
-    if ($result) {
-        $_SESSION['AUTORISATION'] = '';
-    }
-    elseif (!isset($_POST['user']))
-    {
-        $_SESSION['AUTORISATION'] = 'deconnect';
-    }
-    else{
-        $_SESSION['AUTORISATION'] = 'erreur';
-    }
+    // Connexion au serveur LDAP
+    define(LDAP_OPT_DIAGNOSTIC_MESSAGE, 0x0032);
+    $ldapConn = ldap_connect($ldapHostname,$ldapPort)
+        or die("Impossible de se connecter au serveur LDAP.");
 
-    $_SESSION['ID']           = ($result['userstatut'] == 'valid') ? $result['userid'] : null;
-    $_SESSION['USERNAME']     = $result['username'];
-    $_SESSION['USERSTATUT']   = $result['userstatut'];
-    $_SESSION['ADMIN']        = ($result['useradmin'] == true) ? true : false;
+    ldap_set_option($ldapConn, LDAP_OPT_DEBUG_LEVEL, 7);
+    ldap_set_option($ldapConn, LDAP_OPT_X_TLS_CERTFILE, "/etc/openldap/certs/cert-pytheas.pem");
 
-    if (isset($_SESSION['ID']) and ($_SESSION['USERSTATUT'] == 'valid'))
-    {
-        myTasksManagement();
-        return;
+    // pour developpement
+    // constante LDAP dans /Inc/requiere.inc permet de désactiver le controle LDAP en affectant false
+    if (LDAP) {
+        if ($ldapConn) {
+            // Connexion au serveur LDAP
+            $ldapbind = ldap_bind($ldapConn, $ldapRdn, $ldapPass);
+
+            // Vérification de l'authentification dans la base
+            if ($ldapbind) {
+                verifUser($username);
+            } else {
+                if (ldap_get_option($ldapConn, LDAP_OPT_DIAGNOSTIC_MESSAGE, $extended_error)) {
+                    home ('Error Binding to LDAP: '.$extended_error);
+                } else {
+                    home('Error Binding to LDAP: No additional information is available.');
+                }
+            }
+        }
     }
-    elseif ($_SESSION['USERSTATUT'] == 'pending')
-    {
-        $erreur = 'Inscription en attente de validation par un admin';
-        home($erreur);
-    }
-    elseif ($_SESSION['AUTORISATION'] == 'erreur')
-    {
-        $erreur = 'Vous n\'êtes pas inscrit';
-        home($erreur);
-    }
-    elseif ($_SESSION['AUTORISATION'] == 'deconnect')
-    {
-        $erreur = 'Vous n\'êtes pas connecté';
-        home($erreur);
-    }
+        else{
+            verifUser($username);
+        }
 
     return;
 
 } // connect()
 
 /**
+ * Verification sur la base de données du CRAM
+ * @param $username
+ */
+function verifUser($username){
+
+    // dictionnaire de langues
+    global $lang;
+
+    $musers = new MUsers();
+    $user = $musers->verifUser($username);
+
+    //todo voir utilité sinon à supprimer
+    $status['LEADER']  = $musers->leader($user['userid']);
+    $status['MANAGER'] = $musers->manager($user['userid']);
+
+    if ($user['username'] == $username) {
+        $_SESSION['AUTORISATION'] = 'granted';}
+
+    else {
+        home($lang['notRegistered']); //Vous n'avez pas la permission d'accéder au CRAM
+    }
+
+    $_SESSION['ID'] = ($user['userstatut'] == 'valid') ? $user['userid'] : null;
+    $_SESSION['USERNAME'] = $user['username'];
+    $_SESSION['USERSTATUT'] = $user['userstatut'];
+    $_SESSION['ADMIN'] = ($user['useradmin'] == true) ? true : false;
+
+    if (isset($_SESSION['ID']) and ($_SESSION['USERSTATUT'] == 'valid')) {
+        myTasksManagement();
+        return;
+    }
+
+    if ($_SESSION['USERSTATUT'] == 'pending') {
+        home($lang['pending']);  // Inscription en attente de validation par un admin
+    }
+
+    return;
+}
+
+/**
  * Déconnexion
  *
- * @param $LANG
  * @return void
  */
 function deconnexion()
@@ -160,7 +197,6 @@ function deconnexion()
     // On détruit notre session
     session_destroy();
     // On redirige le visiteur vers la page d'accueil
-//    $_SESSION['LANGUAGE'] = 'fr';
     home();
 
     return;
@@ -174,21 +210,55 @@ function deconnexion()
  */
 function inscription()
 {
-    if(!($_POST))
-    {
-        connect();
+    // dictionnaire de langues
+    global $lang;
+
+    if(!($_POST)) {
+        home();
     }
 
-    else{
+    else {
+        ldap();
 
-        global $content;
+        include_once ('../securimage/securimage.php');
+        $securimage = new Securimage();
 
-        $content ['title']  = 'Cram-Web';
-        $content ['class']  = 'VAdmin';
-        $content ['method'] = 'showInscription';
-        $content ['arg']    = '';
+        if ($securimage->check($_POST['captcha_code']) == false)
+        {
+            // code incorrect
+            home($lang['securityCodeIncorrect']);
+            return;
+        }
 
-        return;
+        else {
+            // données POST nécessaires a l'enregistrement provisoire
+            $value['username']    = $_POST['username'];
+            $value['userpwd']    = md5($_POST['userpwd']);
+            $value['email']       = $_POST['email'];
+            $value ['userstatut'] = 'pending';
+
+            $musers = new MUsers();
+            $musers->setValue($value);
+
+            // verifie s'il existe deja dans la base pour éviter les doublons
+            $user = $musers->verifUser($_POST['username']);
+            if($user['username'] == $_POST['username']){
+                if($user['userstatut'] == 'pending'){
+                    home($lang['alreadyRequested']);
+                    return;
+                }
+                else{
+                    home($lang['alreadyRegistered']);
+                    return;
+                }
+            }
+            else{
+                $musers->addUser();  // ajout dans la bdd avec le statut 'pending'
+                home($lang['securityCodeCorrect']);
+                return;
+            }
+        }
+
     }
 
 } // inscription()
@@ -201,7 +271,7 @@ function inscription()
 function myTasksManagement()
 {
     if (!isset($_SESSION['ID'])){
-        connect();
+        home();
         return;
     }
     else
@@ -228,7 +298,7 @@ function adminManagement($type)
 {
     if (isset($_SESSION['AUTORISATION']) AND ($_SESSION['AUTORISATION']) == 'deconnect' OR !isset($_SESSION['AUTORISATION']))
     {
-        connect();
+        home();
     }
     else{
 
@@ -305,7 +375,6 @@ function adminModifyProject($type)
             $mproject->Modify($type);
         }
     }
-debug($_POST);
     adminManagement('Projects');
 
     return;
@@ -338,7 +407,7 @@ function reporting($type)
 {
     if (isset($_SESSION['AUTORISATION']) AND ($_SESSION['AUTORISATION']) == 'deconnect' OR !isset($_SESSION['AUTORISATION']))
     {
-        connect();
+        home();
     }
     else{
 
@@ -361,7 +430,7 @@ function userManagement()
 {
     if (isset($_SESSION['AUTORISATION']) AND ($_SESSION['AUTORISATION']) == 'deconnect' OR !isset($_SESSION['AUTORISATION']))
     {
-        connect();
+        home();
     }
     else{
 
@@ -384,7 +453,7 @@ function userModifyProject()
 {
     if (isset($_SESSION['AUTORISATION']) AND ($_SESSION['AUTORISATION']) == 'deconnect' OR !isset($_SESSION['AUTORISATION']))
     {
-        connect();
+        home();
     }
     else{
 
@@ -423,7 +492,7 @@ function userModifyActivity()
 {
     if (isset($_SESSION['AUTORISATION']) AND ($_SESSION['AUTORISATION']) == 'deconnect' OR !isset($_SESSION['AUTORISATION']))
     {
-        connect();
+        home();
     }
     else{
 
