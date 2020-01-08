@@ -82,17 +82,18 @@ class MUsers
      * Récupère l'ID, le USERNAME, si ADMIN ou non, et le statut VALID ou PENDING dans la table cramuser
      * @access public
      *
+     * @param null $username
      * @return array tuple de la table cramuser
      */
-    public function VerifUser()
+    public function verifUser($username = null)
     {
         $query = "select userid, username, useradmin, userstatut
                   from cramuser
-                  where username = :user";
+                  where username = :username";
 
         $result = $this->conn->prepare($query);
 
-        $result->bindValue(':user', $this->id_user, PDO::PARAM_INT);
+        $result->bindValue(':username', $username, PDO::PARAM_STR);
 
         $result->execute();
 
@@ -114,7 +115,7 @@ class MUsers
         $result->bindValue(':userstatut', $this->value['userstatut'], PDO::PARAM_STR);
         $result->bindValue(':email', $this->value['email'], PDO::PARAM_STR);
 
-        $result->execute() or die($this->ErrorSQL($result));
+        $result->execute() ;
         $this->id_user = $this->conn->lastInsertId();
         $this->value['userid'] = $this->id_user;
 

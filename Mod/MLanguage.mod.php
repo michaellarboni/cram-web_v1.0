@@ -8,7 +8,6 @@
 class MLanguage
 {
     private $userLang;
-//    private $langSelected;
     public  $lang = array();
 
     /**
