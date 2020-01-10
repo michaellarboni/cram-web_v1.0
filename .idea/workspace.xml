@@ -1,16 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="82c232d7-23cf-4536-bce8-baefa6d81532" name="Default Changelist" comment="rename VAdmin to VForm&#10;add">
+    <list default="true" id="82c232d7-23cf-4536-bce8-baefa6d81532" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Html/connexion.OLD.php" beforeDir="false" afterPath="$PROJECT_DIR$/Html/unused/connexion.OLD.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Html/duplicateTaskTr.OLD.php" beforeDir="false" afterPath="$PROJECT_DIR$/Html/unused/duplicateTaskTr.OLD.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Html/saveTask.OLD.php" beforeDir="false" afterPath="$PROJECT_DIR$/Html/unused/saveTask.OLD.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Inc/require.inc.php" beforeDir="false" afterPath="$PROJECT_DIR$/Inc/require.inc.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Php/controllerDate.php" beforeDir="false" afterPath="$PROJECT_DIR$/Inc/controllerDate.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Php/editActivities.php" beforeDir="false" afterPath="$PROJECT_DIR$/Inc/editActivities.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Php/editProjects.php" beforeDir="false" afterPath="$PROJECT_DIR$/Inc/editProjects.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Php/editUsers.php" beforeDir="false" afterPath="$PROJECT_DIR$/Inc/editUsers.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -169,7 +161,7 @@
       <workItem from="1578647942993" duration="578000" />
       <workItem from="1578650195403" duration="330000" />
       <workItem from="1578650527986" duration="239000" />
-      <workItem from="1578650769487" duration="891000" />
+      <workItem from="1578650769487" duration="13899000" />
     </task>
     <task id="LOCAL-00001" summary="v1.0">
       <created>1578391628787</created>
@@ -248,7 +240,56 @@
       <option name="project" value="LOCAL" />
       <updated>1578651351878</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="moved from ../Php/">
+      <created>1578651757429</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1578651757429</updated>
+    </task>
+    <task id="LOCAL-00013" summary="moved on /unused">
+      <created>1578651781625</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1578651781625</updated>
+    </task>
+    <task id="LOCAL-00014" summary="moved to unused">
+      <created>1578651802467</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1578651802467</updated>
+    </task>
+    <task id="LOCAL-00015" summary="update">
+      <created>1578651824774</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1578651824774</updated>
+    </task>
+    <task id="LOCAL-00016" summary="update path">
+      <created>1578669355496</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1578669355496</updated>
+    </task>
+    <task id="LOCAL-00017" summary="delete file">
+      <created>1578669386136</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1578669386136</updated>
+    </task>
+    <task id="LOCAL-00018" summary="update ldap()">
+      <created>1578676014334</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1578676014334</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -272,7 +313,14 @@
     <MESSAGE value="create .gitignore" />
     <MESSAGE value="delete lang.php" />
     <MESSAGE value="delete audio file" />
-    <option name="LAST_COMMIT_MESSAGE" value="delete audio file" />
+    <MESSAGE value="moved from ../Php/" />
+    <MESSAGE value="moved on /unused" />
+    <MESSAGE value="moved to unused" />
+    <MESSAGE value="update" />
+    <MESSAGE value="update path" />
+    <MESSAGE value="delete file" />
+    <MESSAGE value="update ldap()" />
+    <option name="LAST_COMMIT_MESSAGE" value="update ldap()" />
   </component>
   <component name="WindowStateProjectService">
     <state x="555" y="275" width="800" height="684" key="#Notifications" timestamp="1578650657862">
@@ -287,10 +335,10 @@
       <screen x="0" y="27" width="1920" height="1173" />
     </state>
     <state x="491" y="442" width="927" height="349" key="#com.intellij.structuralsearch.plugin.ui.StructuralSearchDialog/0.27.1920.1173/1920.0.1920.1200@0.27.1920.1173" timestamp="1578650417797" />
-    <state x="578" y="103" width="1255" height="1055" key="CommitChangelistDialog2" timestamp="1578651802394">
+    <state x="30" y="27" width="1890" height="1163" key="CommitChangelistDialog2" timestamp="1578676014253">
       <screen x="0" y="27" width="1920" height="1173" />
     </state>
-    <state x="578" y="103" width="1255" height="1055" key="CommitChangelistDialog2/0.27.1920.1173/1920.0.1920.1200@0.27.1920.1173" timestamp="1578651802394" />
+    <state x="30" y="27" width="1890" height="1163" key="CommitChangelistDialog2/0.27.1920.1173/1920.0.1920.1200@0.27.1920.1173" timestamp="1578676014253" />
     <state x="100" y="127" width="1720" height="973" key="DiffContextDialog" timestamp="1578505368705">
       <screen x="0" y="27" width="1920" height="1173" />
     </state>
@@ -319,10 +367,10 @@
       <screen x="0" y="27" width="1920" height="1173" />
     </state>
     <state width="257" height="520" key="HiddenNamespacesPopup/0.27.1920.1173/1920.0.1920.1200@0.27.1920.1173" timestamp="1578394126161" />
-    <state x="756" y="538" width="397" height="158" key="NewPhpFileDialog" timestamp="1578411096466">
+    <state x="756" y="538" width="397" height="158" key="NewPhpFileDialog" timestamp="1578651956127">
       <screen x="0" y="27" width="1920" height="1173" />
     </state>
-    <state x="756" y="538" width="397" height="158" key="NewPhpFileDialog/0.27.1920.1173/1920.0.1920.1200@0.27.1920.1173" timestamp="1578411096466" />
+    <state x="756" y="538" width="397" height="158" key="NewPhpFileDialog/0.27.1920.1173/1920.0.1920.1200@0.27.1920.1173" timestamp="1578651956127" />
     <state x="449" y="248" width="1022" height="737" key="SettingsEditor" timestamp="1578650491268">
       <screen x="0" y="27" width="1920" height="1173" />
     </state>
@@ -347,14 +395,18 @@
       <screen x="0" y="27" width="1920" height="1173" />
     </state>
     <state x="677" y="409" width="556" height="439" key="com.intellij.database.view.ui.DatabasePreviewDialog/0.27.1920.1173/1920.0.1920.1200@0.27.1920.1173" timestamp="1578394227262" />
-    <state x="570" y="227" width="770" height="779" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1578479280343">
+    <state x="570" y="227" width="770" height="779" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1578675674619">
       <screen x="0" y="27" width="1920" height="1173" />
     </state>
-    <state x="570" y="227" width="770" height="779" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.27.1920.1173/1920.0.1920.1200@0.27.1920.1173" timestamp="1578479280343" />
+    <state x="570" y="227" width="770" height="779" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.27.1920.1173/1920.0.1920.1200@0.27.1920.1173" timestamp="1578675674619" />
     <state x="752" y="353" width="395" height="533" key="com.intellij.openapi.vcs.changes.SpecificFilesViewDialog" timestamp="1578391169481">
       <screen x="0" y="27" width="1920" height="1173" />
     </state>
     <state x="752" y="353" width="395" height="533" key="com.intellij.openapi.vcs.changes.SpecificFilesViewDialog/0.27.1920.1173/1920.0.1920.1200@0.27.1920.1173" timestamp="1578391169481" />
+    <state x="457" y="27" width="1463" height="768" maximized="true" key="dock-window-1" timestamp="1578653770911">
+      <screen x="0" y="27" width="1920" height="1173" />
+    </state>
+    <state x="457" y="27" width="1463" height="768" maximized="true" key="dock-window-1/0.27.1920.1173/1920.0.1920.1200@0.27.1920.1173" timestamp="1578653770911" />
     <state x="608" y="340" width="703" height="546" key="find.popup" timestamp="1578650380400">
       <screen x="0" y="27" width="1920" height="1173" />
     </state>
