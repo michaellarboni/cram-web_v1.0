@@ -8,7 +8,7 @@
 
 // Debuggage
 define('DEBUG', true);
-define('LDAP', true);
+define('LDAP', false);
 
 // Connexion Base de Données
 /*define('DATABASE', 'mysql:host=votre_host;dbname=nom_de_votre_base');
