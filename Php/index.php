@@ -101,22 +101,15 @@ function home($erreur = '')
  */
 function ldap()
 {
-    $username = isset($_POST['username']) ? $_POST['username'] : 'null' ;
-
     // Eléments d'authentification LDAP
+    $username = isset($_POST['username']) ? $_POST['username'] : 'null' ;
     $ldapRdn  = 'uid=' . $username . ',ou=people,dc=pytheas,dc=fr';     // DN ou RDN LDAP
-    $ldapPass = $_POST['userpwd'];  // Mot de passe associé
-    //$ldapHostname = "ldaps://ldap.pytheas.univ-amu.fr";
-    $ldapHostname = "ldaps://ldap-c.osupytheas.fr";
-    $ldapPort = "636";
+    $ldapPass = $_POST['userpwd'];
 
     // Connexion au serveur LDAP
     define(LDAP_OPT_DIAGNOSTIC_MESSAGE, 0x0032);
-    $ldapConn = ldap_connect($ldapHostname,$ldapPort)
+    $ldapConn = ldap_connect("ldaps://ldap.osupytheas.fr:636")
         or die("Impossible de se connecter au serveur LDAP.");
-
-    ldap_set_option($ldapConn, LDAP_OPT_DEBUG_LEVEL, 7);
-    ldap_set_option($ldapConn, LDAP_OPT_X_TLS_CERTFILE, "/etc/openldap/certs/cert-pytheas.pem");
 
     // pour developpement
     // constante LDAP dans /Inc/requiere.inc permet de désactiver le controle LDAP en affectant false
@@ -156,10 +149,6 @@ function verifUser($username){
 
     $musers = new MUsers();
     $user = $musers->verifUser($username);
-
-    //todo voir utilité sinon à supprimer
-    $status['LEADER']  = $musers->leader($user['userid']);
-    $status['MANAGER'] = $musers->manager($user['userid']);
 
     if ($user['username'] == $username) {
         $_SESSION['AUTORISATION'] = 'granted';}
