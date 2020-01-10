@@ -1,6 +1,6 @@
 <?php
 include '../Inc/head2.php'; // pour les scripts supplémentaires
-require '../Php/controllerDate.php'; // pour les methodes est les controles des variables
+require '../Inc/controllerDate.php'; // pour les methodes est les controles des variables
 
 //objet language
 $mlanguage = new MLanguage(isset($_SESSION['LANGUAGE']) ? $_SESSION['LANGUAGE'] : 'fr' );
