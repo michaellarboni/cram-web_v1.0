@@ -11,12 +11,9 @@ define('DEBUG', false);
 define('LDAP', true);
 
 // Connexion Base de Données
-/*define('DATABASE', 'mysql:host=votre_host;dbname=nom_de_votre_base');
-define('LOGIN', 'login_de_connexion');
-define('PASSWORD', 'mot_de_passe_de_connexion');*/
 define('DATABASE', 'pgsql:host=localhost;port=5432;dbname=cram_0');
 define('LOGIN', 'cram');
-define('PASSWORD', 'CRAM_usage$0');
+define('PASSWORD', 'MOT_DE_PASSE');
 
 /**
  * Chargement automatique des class
