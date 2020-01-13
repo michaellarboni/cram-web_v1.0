@@ -138,8 +138,8 @@ foreach($data['activities'] as $val)
 
             <div class="row-fluid">
                 <div class="col-lg-12 text-center">
-                    <input class="col-lg-5 btn btn-primary" id="previous" type="submit" name="save_previous" value="<?php echo $lang['savePrevious'] ?>"/>
-                    <input class="col-lg-5 btn btn-primary" id="next" type="submit" name="save_next" value="<?php echo $lang['saveNext'] ?>">
+<!--                    <input class="col-lg-5 btn btn-primary" id="previous" type="submit" name="save_previous" value="<?php echo $lang['savePrevious'] ?>"/> -->
+<!--                    <input class="col-lg-5 btn btn-primary" id="next" type="submit" name="save_next" value="<?php echo $lang['saveNext'] ?>"> -->
                 </div>
             </div>
 

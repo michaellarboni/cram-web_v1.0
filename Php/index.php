@@ -107,12 +107,12 @@ function ldap()
     $ldapPass = $_POST['userpwd'];
 
     // Connexion au serveur LDAP
-    define(LDAP_OPT_DIAGNOSTIC_MESSAGE, 0x0032);
+    // JCM 13/01  define(LDAP_OPT_DIAGNOSTIC_MESSAGE, 0x0032);
     $ldapConn = ldap_connect("ldaps://ldap.osupytheas.fr:636")
         or die("Impossible de se connecter au serveur LDAP.");
 
     // pour developpement
-    // constante LDAP dans /Inc/requiere.inc permet de désactiver le controle LDAP en affectant false
+    // constante LDAP dans /Inc/require.inc permet de désactiver le controle LDAP en affectant false
     if (LDAP) {
         if ($ldapConn) {
             // Connexion au serveur LDAP
@@ -122,11 +122,7 @@ function ldap()
             if ($ldapbind) {
                 verifUser($username);
             } else {
-                if (ldap_get_option($ldapConn, LDAP_OPT_DIAGNOSTIC_MESSAGE, $extended_error)) {
-                    home ('Error Binding to LDAP: '.$extended_error);
-                } else {
-                    home('Error Binding to LDAP: No additional information is available.');
-                }
+                    home('Identifiant ou mot de passe inccorect');
             }
         }
     }
@@ -207,8 +203,6 @@ function inscription()
     }
 
     else {
-        ldap();
-
         include_once ('../securimage/securimage.php');
         $securimage = new Securimage();
 
@@ -220,34 +214,64 @@ function inscription()
         }
 
         else {
-            // données POST nécessaires a l'enregistrement provisoire
-            $value['username']    = $_POST['username'];
-            $value['userpwd']    = md5($_POST['userpwd']);
-            $value['email']       = $_POST['email'];
-            $value ['userstatut'] = 'pending';
+            // Eléments d'authentification LDAP
+            $username = isset($_POST['username']) ? $_POST['username'] : 'null' ;
+            $ldapRdn  = 'uid=' . $username . ',ou=people,dc=pytheas,dc=fr';     // DN ou RDN LDAP
+            $ldapPass = $_POST['userpwd'];
 
-            $musers = new MUsers();
-            $musers->setValue($value);
+            // Connexion au serveur LDAP
+            $ldapConn = ldap_connect("ldaps://ldap.osupytheas.fr:636")
+            or die("Impossible de se connecter au serveur LDAP.");
 
-            // verifie s'il existe deja dans la base pour éviter les doublons
-            $user = $musers->verifUser($_POST['username']);
-            if($user['username'] == $_POST['username']){
-                if($user['userstatut'] == 'pending'){
-                    home($lang['alreadyRequested']);
-                    return;
+            // pour developpement
+            // constante LDAP dans /Inc/requiere.inc permet de désactiver le controle LDAP en affectant false
+            if (LDAP) {
+                if ($ldapConn) {
+                    // Connexion au serveur LDAP
+                    $ldapbind = ldap_bind($ldapConn, $ldapRdn, $ldapPass);
+
+                    // Vérification de l'authentification dans la base
+                    if ($ldapbind) {
+                        // données POST nécessaires a l'enregistrement provisoire
+                        $value['username']    = $_POST['username'];
+                        $value['userpwd']    = md5($_POST['userpwd']);
+                        $value['email']       = $_POST['email'];
+                        $value ['userstatut'] = 'pending';
+
+                        $musers = new MUsers();
+                        $musers->setValue($value);
+
+                        // verifie s'il existe deja dans la base pour éviter les doublons
+                        $user = $musers->verifUser($_POST['username']);
+                        if($user['username'] == $_POST['username']){
+                            if($user['userstatut'] == 'pending'){
+                                home($lang['alreadyRequested']);
+                                return;
+                            }
+                            else{
+                                home($lang['alreadyRegistered']);
+                                return;
+                            }
+                        }
+                        else{
+                            $musers->addUser();  // ajout dans la bdd avec le statut 'pending'
+                            home($lang['securityCodeCorrect']);
+                            return;
+                        }
+
+                    }
+                    else{
+                        home('Identifiant ou mot de passe inccorect');
+                    }
                 }
                 else{
-                    home($lang['alreadyRegistered']);
-                    return;
+                    home('LDAP n\'est pas disponible, impossible de procéder à l \'inscription');
                 }
             }
             else{
-                $musers->addUser();  // ajout dans la bdd avec le statut 'pending'
-                home($lang['securityCodeCorrect']);
-                return;
+                home('LDAP n\'est pas disponible, impossible de procéder à l \'inscription');
             }
         }
-
     }
 
 } // inscription()

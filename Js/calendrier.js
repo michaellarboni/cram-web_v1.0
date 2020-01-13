@@ -261,14 +261,14 @@ function savePrevious(){
 
 function initAjaxForm(){
     $('#dialog-form input[name="delete"]').on('click', function(e){
-        if(confirm("Are you sure to delete ?")){
+        if(confirm("Confirm suppression ?")){
             $('#myform').attr('action', "../Inc/deleteMultiTasks.php");
             $('#myform').submit();
         }
         e.preventDefault();
     });
     $('#dialog-form input[name="valid"]').on('click', function(e){
-        $('#myform').attr('action', "../Inc/saveMultiTasks");
+        $('#myform').attr('action', "../Inc/saveMultiTasks.php");
         $('#myform').submit();
         e.preventDefault();
     });
