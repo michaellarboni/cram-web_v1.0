@@ -1,7 +1,7 @@
-/*
-
+/**
     Created on : 25 août 2015, 13:30:18
     Author     : Anthony K GROSS <anthony.k.gross@gmail.com>
+    Updated on : 01/2020 by Michael LARBONI
 */
 
 body {
@@ -81,6 +81,23 @@ body {
     max-width: 1200px;
 }
 .hidden{
-    /*display: none;*/
     visibility: hidden;
+}
+
+select {
+    width: auto;
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    font-weight: 300;
+}
+
+label{
+    padding: 8px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.vertical-center {
+    margin-top: 50vh;
+    transform: translateY(-50%);
 }
