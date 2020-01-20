@@ -29,7 +29,7 @@ foreach($data['projects'] as $key=>$val)
 {
     if ($val['flag'])
     {
-        $optionsProjects .= '<option value="'.$val['projectid'].'" label="'.$val['name'].'">'.$val['name'].'</option>';
+        $optionsProjects .= '<option value="'.$val['projectid'].'" label="'.$val['projectname'].'">'.$val['projectname'].'</option>';
     }
 }
 
