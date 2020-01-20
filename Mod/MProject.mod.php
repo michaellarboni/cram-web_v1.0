@@ -191,12 +191,12 @@ class MProject
      */
     function getAllProjects($user)
     {
-        $query = "SELECT P.projectid, full_projectname(P.projectid) as name,
+        $query = "SELECT P.projectid, full_projectname(P.projectid) as projectname,
                                 case when U.userid is not null then true else false end as flag
                                 from project as P
                                 left join projectuser as U on (U.userid = :user and  
                                 P.projectid = U.projectid )
-                                order by name";
+                                order by projectname";
 
         $result = $this->conn->prepare($query);
 
