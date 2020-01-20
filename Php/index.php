@@ -447,12 +447,18 @@ function userManagement()
     }
     else{
 
+        $mproject = new MProject();
+        $mactivity = new MActivity();
+
+        $data['project']  = $mproject->getAllProjects($_SESSION['ID']);;
+        $data['activity'] = $mactivity->getAllActivities($_SESSION['ID']);;
+
         global $content;
 
         $content ['title']  = 'Cram-Web';
         $content ['class']  = 'VUserManagements';
         $content ['method'] = 'showManagement';
-        $content ['arg']    = '';
+        $content ['arg']    = $data;
 
         return;
     }
@@ -487,7 +493,6 @@ function userModifyProject()
             }
         }
 
-//        header('Loacation, ../Php/index.php?EX=userManagement');
         userManagement();
 
 
