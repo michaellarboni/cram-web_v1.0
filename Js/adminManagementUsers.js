@@ -17,7 +17,7 @@ Array.from( // crée un array depuis la nodelist de button
                 }
             };
 
-            fetch('../Php/editUsers.php', { // fait un appel asynchrone au serveur
+            fetch('../Inc/editUsers.php', { // fait un appel asynchrone au serveur
                 method: 'POST',
                 cache: "no-cache",
                 headers: {
@@ -54,7 +54,7 @@ Array.from( // crée un array depuis la nodelist de button
                 }
             };
 
-            fetch('../Php/editUsers.php', { // fait un appel asynchrone au serveur
+            fetch('../Inc/editUsers.php', { // fait un appel asynchrone au serveur
                 method: 'POST',
                 cache: "no-cache",
                 headers: {
@@ -92,7 +92,7 @@ Array.from( // crée un array depuis la nodelist de button
                 }
             };
 
-            fetch('../Php/editUsers.php', { // fait un appel asynchrone au serveur
+            fetch('../Inc/editUsers.php', { // fait un appel asynchrone au serveur
                 method: 'POST',
                 cache: "no-cache",
                 headers: {
