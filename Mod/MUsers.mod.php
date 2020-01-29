@@ -122,6 +122,24 @@ class MUsers
     } //addUser()
 
     /**
+     *  mise a jour de la table cramuser
+     */
+    public function update(){
+        $query = 'update cramuser
+                     set name = :name,
+                         lastname = :lastname,
+                         email = :email
+                   where username = :username';
+
+        $result = $this->conn->prepare($query);
+
+        $result->bindParam(':username', $this->value['username'],PDO::PARAM_STR);
+        $result->bindParam(':name', $this->value['name'],PDO::PARAM_STR);
+        $result->bindParam(':lastname', $this->value['lastname'],PDO::PARAM_STR);
+        $result->bindParam(':email', $this->value['email'],PDO::PARAM_STR);
+        $result->execute()or die ($this->ErrorSQL($result)) ;
+    }
+    /**
      * Requete pour changer les droits d'admin en fonction de l'userid
      */
     public function setAdmin()
