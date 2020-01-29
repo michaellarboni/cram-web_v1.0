@@ -322,6 +322,7 @@ class MProject
     /**
      *  ErrorSQL
      * @param $result
+     * @return array
      */
     private function ErrorSQL($result)
     {
@@ -332,8 +333,8 @@ class MProject
         echo 'CODE_ERROR = ' . $error[1] . '<br />';
         echo 'MSG_ERROR = ' . $error[2] . '<br />';
 
-        return;
+        return $error;
 
     }
-} // MUsers
+} // MProject
 
