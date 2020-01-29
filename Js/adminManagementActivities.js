@@ -1,5 +1,5 @@
 /**
- * Fichier de gestion de la page d'aministration des utilisateurs
+ * Fichier de gestion de la page d'aministration des activités
  */
 
 /**
