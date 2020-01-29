@@ -87,7 +87,7 @@ class MUsers
      */
     public function verifUser($username = null)
     {
-        $query = "select userid, username, useradmin, userstatut
+        $query = "select userid, username, name, lastname, useradmin, userstatut
                   from cramuser
                   where username = :username";
 
