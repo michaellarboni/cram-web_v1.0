@@ -251,14 +251,7 @@ $(function() {
 									</div>
 									<div class="form-group">
 										<input type="password" name="userpwd" tabindex="2" class="form-control" placeholder="$password" required>
-									</div>
-									<!-- <div class="form-group">
-										<input type="password" name="confirm-password" id="confirm-password" tabindex="2" class="form-control" placeholder="Confirm $password">
-									</div> -->
-                                    <div class="form-group">
-										<input type="email" name="email" id="inputEmail" tabindex="3" class="form-control" placeholder="Email" value="" required>
-									</div>
-									
+									</div>									
 									<div class="form-group">
                                         <input type="text" name="captcha_code" tabindex="4" maxlength="6" class="form-control" placeholder="$enterCaptcha" required>
                                     </div>

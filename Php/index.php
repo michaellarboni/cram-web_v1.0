@@ -155,6 +155,7 @@ function verifUser($username){
 
     $_SESSION['ID'] = ($user['userstatut'] == 'valid') ? $user['userid'] : null;
     $_SESSION['USERNAME'] = $user['username'];
+    $_SESSION['NAME'] = $user['name'];
     $_SESSION['USERSTATUT'] = $user['userstatut'];
     $_SESSION['ADMIN'] = ($user['useradmin'] == true) ? true : false;
 
@@ -235,7 +236,6 @@ function inscription()
                         // données POST nécessaires a l'enregistrement provisoire
                         $value['username']    = $_POST['username'];
                         $value['userpwd']    = md5($_POST['userpwd']);
-                        $value['email']       = $_POST['email'];
                         $value ['userstatut'] = 'pending';
 
                         $musers = new MUsers();
