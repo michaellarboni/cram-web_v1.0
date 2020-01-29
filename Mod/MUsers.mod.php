@@ -106,14 +106,12 @@ class MUsers
      */
     public function addUser()
     {
-        $query = "insert into cramuser (username, userpwd, userstatut, email)
-                  values (:username, :userpwd, :userstatut, :email)";
+        $query = "insert into cramuser (username, userstatut)
+                  values (:username, :userstatut)";
 
         $result = $this->conn->prepare($query);
         $result->bindValue(':username', $this->value['username'], PDO::PARAM_STR);
-        $result->bindValue(':userpwd', $this->value['userpwd'], PDO::PARAM_STR);
         $result->bindValue(':userstatut', $this->value['userstatut'], PDO::PARAM_STR);
-        $result->bindValue(':email', $this->value['email'], PDO::PARAM_STR);
 
         $result->execute() ;
         $this->id_user = $this->conn->lastInsertId();
@@ -292,31 +290,6 @@ class MUsers
         $result->execute() or die ($this->ErrorSQL($result));
 
         return $result->fetch();
-
-    }
-    /**
-     * renvoie un tableau avec l'id et le username
-     * @return mixed
-     */
-    public function selectByUsername()
-    {
-        $query = "select userid,
-                         username,
-                         userstatut,
-                         userdatestatut,
-                         useradmin,
-                         userstartdate,
-                         usersynchrodate 
-                from cramuser
-                where username = :username";
-
-        $result = $this->conn->prepare($query);
-
-        $result->bindValue(':username', $this->value['username'], PDO::PARAM_STR);
-
-        $result->execute() or die ($this->ErrorSQL($result));
-
-        return $result->fetchAll();
 
     }
 
