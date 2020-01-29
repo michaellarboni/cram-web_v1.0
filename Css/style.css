@@ -80,6 +80,9 @@ body {
 .table-adminActivities, .table-adminUsers{
     max-width: 1200px;
 }
+.table td{
+    padding: 0;
+}
 .hidden{
     visibility: hidden;
 }
