@@ -137,11 +137,17 @@ class VAdminManagements
         $tr = '';
         $divModalDelete   = '';
         $divModalEdit     = '';
-        $divModalListing  = '';
-        $mproject         = new MProject();
-        $data_projectsList  = $mproject->listProject();
+        $divModalListUsers  = '';
+        $divModalListManagers = '';
 
-        //boucle sur le tableau des projets et instancie les variables pour construction tableau
+        $mproject = new MProject();
+        $data_projectsList = $mproject->listProject();
+        $musers = new MUsers();
+        $data_usersList = $musers->selectAll();
+
+        $optionsManager = '';
+
+        //boucle sur le tableau des projets et instancie les variables pour construction table
         foreach ($_data as $val) {
 
             $mproject = new MProject($val['projectid']);
@@ -149,46 +155,99 @@ class VAdminManagements
             // recupere le nom complet du projet avec ses parents
             $parentProject = $mproject->fullProjectName();
 
-            // Retourne le nom du chef de projet
+            /**
+             * colonne manager
+             */
+
+            // Retourne les infos du manager
             $managerNameProject = $mproject->managerNameProject();
+            // si il y a au moins 2 managers on affiche ' [...]'
+            $plus = (isset($managerNameProject[1]['lastname'])) ? ' [...]' : '';
+            // si le nom de famille (lastname) n'est pas connu, on affiche son username
+            if (isset($managerNameProject[0]['lastname']) == null) {
+                $name = isset($managerNameProject[0]['username']) ? $managerNameProject[0]['username'] : '';
+            } else {
+                $name = ucfirst(strtolower($managerNameProject[0]['lastname']));
+            }
+            $managersBtn = ($managerNameProject) ?
+                '<div><button class="btn-secondary btn-rounded btn-sm" data-toggle="modal" data-target="#modalListManagers' . $val['projectid'] . '">' . $name . $plus . '</button></div>' : '';
+
+            // boucle sur les noms des managers pour creation element <li>
+            $managerList = '';
+            foreach ($managerNameProject as $val1) {
+                $managerList .= ($val1['name'] == null) ? '<li>' . $val1['username'] . '</li>' : '<li>' . $val1['lastname'] . ' ' . $val1['name'] . '</li>';
+            }
+
+            // boucle sur la liste complete des users
+            //todo remplacer username par lastname.name (si bdd purgée des users non LDAP)
+            //todo permettre la suppression et modification des managers existants
+            foreach ($data_usersList as $val1){
+                $userid = $val1['userid'];
+                $username = $val1['username'];
+                $selected = '';
+                foreach ($managerNameProject as $val2) {
+                    $selected =  ($userid == $val2['userid']) ? 'selected="selected"' : '';
+                }
+                $optionsManager .= '<option '.$selected.' name="'.$username.'" value="'.$userid.'">'.$username.'</option>';
+
+            }
+
+            /**
+             * colonne utilisateur actifs
+             */
 
             //retourne les noms des utilisateurs ayant declarés une tache sur le projet et crée un boutton liste
             $usernameTaskProject = $mproject->usernameTaskProject();
-            $listeBtn = ($usernameTaskProject) ? '<button class="btn btn-info btn-rounded btn-sm" data-toggle="modal" data-target="#modalListing'.$val['projectid'].'">'.$lang['listing'].'</button>' : '';
+            // si il y a au moins 2 users on affiche ' [...]'
+            $plus = (isset($usernameTaskProject[1]['lastname'])) ? ' [...]' : '';
+            // si le nom de famille (lastname) n'est pas connu, on affiche son username
+            if (isset($usernameTaskProject[0]['lastname']) == null) {
+                $name = isset($usernameTaskProject[0]['username']) ? $usernameTaskProject[0]['username'] : '';
+            } else {
+                $name = ucfirst(strtolower($usernameTaskProject[0]['lastname']));
+            }
+            $userBtn = ($usernameTaskProject) ? '<div><button class="btn-secondary btn-rounded btn-sm" data-toggle="modal" data-target="#modalListUsers'.$val['projectid'].'">'.$name.$plus.'</button></div>' : '';
 
-            // attribut disabled (pour rendre inactif le bouton supprimer)
-            $disabled = ($usernameTaskProject) ? 'disabled' : '';
-
-            // boucle sur les nom des utilisateurs pour creation element <li>
+            // boucle sur les noms des utilisateurs pour creation element <li>
             $projectuser = '';
-            foreach ($usernameTaskProject as $val1)
-            {
-                $projectuser .= '<li>'.$val1['username'].'</li>';
+            foreach ($usernameTaskProject as $val1) {
+                $projectuser .= ($val1['name'] == null) ? '<li>' . $val1['username'] . '</li>' : '<li>' . $val1['lastname'] . ' ' . $val1['name'] . '</li>';
             }
 
+            /**
+             * pour le formulaire d'edition
+             */
             $optionsProjects = '';
             // boucle sur la liste complete des projets
             // verifie si le projet est le meme que celui du parent du projet actuel et ajoute un selected pour l'option
-            foreach ($data_projectsList as $val2){
-                if($val['projectparentid'] == $val2['projectid']){
+            foreach ($data_projectsList as $val2) {
+                if ($val['projectparentid'] == $val2['projectid']) {
 
-                    $optionsProjects .= '<option selected="selected" name="'.$val2['projectid'].'" value="'.$val2['projectid'].'">'.$val2['projectname'].'</option>';
-                }
-                else{
-                    $optionsProjects .= '<option name="'.$val2['projectid'].'" value="'.$val2['projectid'].'">'.$val2['projectname'].'</option>';
+                    $optionsProjects .= '<option selected="selected" name="' . $val2['projectid'] . '" value="' . $val2['projectid'] . '">' . $val2['projectname'] . '</option>';
+                } else {
+                    $optionsProjects .= '<option name="' . $val2['projectid'] . '" value="' . $val2['projectid'] . '">' . $val2['projectname'] . '</option>';
                 }
             }
 
+            /**
+             * colonne edition
+             */
+            // attribut disabled (pour rendre inactif le bouton supprimer)
+            $disabled = ($usernameTaskProject) ? 'disabled' : '';
+
+            /**
+             *
+             */
             $tr .= '
                     <tr>
                       <td>' . $val['projectname'] . '</td>
                       <td>'.$parentProject['full_projectname'].'</td>
                       <td>' . $val['projectenddate'] . '</td>
-                      <td>'.$managerNameProject['username'].'</td>
-                      <td>'.$listeBtn.'</td>
+                      <td>'.$managersBtn.'</td>
+                      <td>'.$userBtn.'</td>
                       <td>
-                         <button class="btn btn-danger btn-sm btn-rounded buttonDelete" data-toggle="modal" data-target="#modalDelete'.$val['projectid'].'" '.$disabled.'>'.$lang['delete'].'<i class="fas fa-times ml-1"> </i></button>
-                          <button class="btn btn-info btn-rounded btn-sm buttonEdit" data-toggle="modal" data-target="#modalEdit'.$val['projectid'].'">'.$lang['edit'].'<i class="fas fa-pencil-square-o ml-1"> </i></button>
+                         <button class="btn btn-danger btn-sm btn-rounded buttonDelete" data-toggle="modal" data-target="#modalDelete'.$val['projectid'].'" '.$disabled.'><i class="fas fa-times ml-1"></i></button>
+                          <button class="btn btn-info btn-rounded btn-sm buttonEdit" data-toggle="modal" data-target="#modalEdit'.$val['projectid'].'"><i class="fas fa-pencil-square-o ml-1"></i></button>
                       </td>
                     </tr>';
 
@@ -227,7 +286,7 @@ class VAdminManagements
                                 </div>
                                 <div class="modal-body mx-3">
                                     <div class="md-form mb-5">
-                                        <label data-error="wrong" data-success="right" for="projectname'.$val['projectid'].'">'.$lang['name'].'</label>
+                                        <label data-error="wrong" data-success="right" for="projectname'.$val['projectid'].'">'.$lang['projectname'].'</label>
                                         <input type="text" id="projectname'.$val['projectid'].'" name="projectname" class="form-control validate" value="'.$val['projectname'].'">
                                     </div>
                             
@@ -238,7 +297,7 @@ class VAdminManagements
                                             '.$optionsProjects.'
                                         </select>
                                     </div>
-                            
+
                                     <div class="md-form mb-5">
                                         <label data-error="wrong" data-success="right" for="projectenddate'.$val['projectid'].'">'.$lang['projectEndDate'].'</label>
                                         <input type="date" id="projectenddate'.$val['projectid'].'" name="projectenddate" class="form-control" value="'.$val['projectenddate'].'">
@@ -252,13 +311,13 @@ class VAdminManagements
                     </div>
                 </div>';
 
-            $divModalListing .= '
+            $divModalListUsers .= '
                 <!-- Liste des utilisateurs du projet-->
-                <div class="modal fade" id="modalListing'.$val['projectid'].'" tabindex="-1" role="dialog" aria-labelledby="modalListing" aria-hidden="true">
+                <div class="modal fade" id="modalListUsers'.$val['projectid'].'" tabindex="-1" role="dialog" aria-labelledby="modalListUsers" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header text-center">
-                            <h4 class="modal-title w-100 font-weight-bold text-primary">'.$lang['listingUsers'].'</h4>
+                            <h4 class="modal-title w-100 font-weight-bold text-primary">'.$lang['listingManagers'].'</h4>
                             </div>
                             <div class="modal-body mx-3">
                                 <div class="md-form mb-5">
@@ -270,11 +329,29 @@ class VAdminManagements
                         </div>
                     </div>
                 </div>';
+            
+            $divModalListManagers .= '
+                <!-- Liste des utilisateurs du projet-->
+                <div class="modal fade" id="modalListManagers'.$val['projectid'].'" tabindex="-1" role="dialog" aria-labelledby="modalListManagers" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header text-center">
+                            <h4 class="modal-title w-100 font-weight-bold text-primary">'.$lang['listingManagers'].'</h4>
+                            </div>
+                            <div class="modal-body mx-3">
+                                <div class="md-form mb-5">
+                                    <ul>
+                                        '.$managerList.'
+                                    </ul>
+                                </div>
+                            </div>                                          
+                        </div>
+                    </div>
+                </div>';
 
         }
 
 ?>
-
 <!--     Affichage des projets-->
 
 <!-- Font Awesome -->
@@ -295,14 +372,16 @@ class VAdminManagements
         <?php echo
         $divModalEdit.
         $divModalDelete.
-        $divModalListing?>
+        $divModalListUsers.
+        $divModalListManagers
+        ?>
     </div>
 
     <!--Table-->
     <table id="table" class="table table-bordered table-responsive-md table-striped text-center">
         <thead>
             <tr>
-                <th class="text-center"><?php echo $lang['name']?></th>
+                <th class="text-center"><?php echo $lang['projectname']?></th>
                 <th class="text-center"><?php echo $lang['parent']?></th>
                 <th class="text-center"><?php echo $lang['projectEndDate']?></th>
                 <th class="text-center"><?php echo $lang['manager']?></th>
@@ -541,7 +620,7 @@ class VAdminManagements
                     </div>
                     <div class="modal-body mx-3">
                         <div class="md-form mb-5">
-                            <label data-error="wrong" data-success="right" for="projectname"><?php echo $lang['name']?></label>
+                            <label data-error="wrong" data-success="right" for="projectname"><?php echo $lang['projectname']?></label>
                             <input type="text" id="projectname" name="projectname" class="form-control validate">
                         </div>
                         <div class="md-form mb-5">
