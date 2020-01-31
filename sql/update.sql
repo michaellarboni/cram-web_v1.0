@@ -18,3 +18,6 @@ begin
     return null;
 end;
 $$;
+-- userpwd not null
+alter table cramuser alter column userpwd drop not null;
+--todo supprimer la colonne userpw
