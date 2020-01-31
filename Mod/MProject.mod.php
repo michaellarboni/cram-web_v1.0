@@ -26,7 +26,7 @@ class MProject
     private $value;
 
     /**
-     * Constructeur de la class MUsers
+     * Constructeur de la class MProject
      * @access public
      *
      * @param null $_projectid
@@ -42,7 +42,7 @@ class MProject
     } // __construct()
 
     /**
-     * Destructeur de la class MUsers
+     * Destructeur de la class MProject
      * @access public
      *
      * @return void
@@ -145,7 +145,7 @@ class MProject
      */
     function managerNameProject()
     {
-        $query = "SELECT distinct M.userid, C.username
+        $query = "SELECT distinct M.userid, C.username, C.lastname, C.name
                   from project as P
                            natural join manager as M
                            natural join cramuser as C
@@ -158,7 +158,7 @@ class MProject
 
         $result->execute();
 
-        return $result->fetch();
+        return $result->fetchAll();
 
     } // managerNameProject()
 
@@ -168,7 +168,7 @@ class MProject
      */
     function usernameTaskProject()
     {
-        $query = "select distinct C.username
+        $query = "select distinct C.username, C.name, C.lastname
                   from task as T
                   natural join cramuser as C
                   where projectid = :projectid";
@@ -269,7 +269,7 @@ class MProject
 
         return $this->value;
 
-    } // addProject()
+    } // insert()
 
     /**
      * Modifie les données d'un tuple dans la table project
