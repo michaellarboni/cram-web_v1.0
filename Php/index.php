@@ -375,9 +375,21 @@ function adminModifyProject($type)
     $value['projectid'] = $id_project;
     if($type != 'delete'){
         $value['projectparentid'] = (isset($_POST['projectparentid'])) ? $_POST['projectparentid'] : null;
-        $value['projectenddate']  = ($_POST['projectenddate']) ? $_POST['projectenddate'] : null;
+        $value['projectenddate']  = (isset($_POST['projectenddate'])) ? $_POST['projectenddate'] : null;
+        $value['userid']          = (isset($_POST['managerid'])) ? $_POST['managerid'] : null;
         $mproject->setValue($value);
         $mproject->Modify($type);
+        if ($type == 'update'){
+            $mmanager = new MManager();
+            if (isset($_POST['managerid'])) //si on a sélectionné des projets dans la liste des autres projets
+            {
+                foreach ($_POST['managerid'] as $value['userid'])
+                {
+                    $mmanager->setValue($value);
+                    $mmanager->insert();
+                }
+            }
+        }
     }
     else{
         if($mproject->verifContrainte()){
