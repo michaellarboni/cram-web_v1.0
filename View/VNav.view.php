@@ -35,7 +35,7 @@ class VNav
         $leader  = $musers->leader($_SESSION['ID']);
         $manager = $musers->manager($_SESSION['ID']);
 
-        $name = $_SESSION['NAME'];
+        $name = ($_SESSION['NAME'] != null) ? $_SESSION['NAME'] : $_SESSION['USERNAME'];
         $liReportUser    = '<a href="../Php/index.php?EX=reportingUser">'.$lang['user'].'</a>';
         $liReportLeader  = ($leader) ? '<a href="../Php/index.php?EX=reportingLeader">'.$lang['leader'].'</a>' : '';
         $liReportManager = ($manager) ? '<a href="../Php/index.php?EX=reportingManager">'.$lang['manager'].'</a>' : '' ;
