@@ -233,6 +233,7 @@ class VAdminManagements
              * colonne edition
              */
             // attribut disabled (pour rendre inactif le bouton supprimer)
+            // si au moins un utilisateur a declaré une tache sur le projet
             $disabled = ($usernameTaskProject) ? 'disabled' : '';
 
             /**
