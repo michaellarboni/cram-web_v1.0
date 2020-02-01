@@ -306,6 +306,8 @@ class MProject
      */
     private function delete()
     {
+        $this->deleteProjectUser();
+        
         $query = 'delete from project
                 where projectid = :projectid';
 
@@ -318,6 +320,26 @@ class MProject
         return;
 
     } //deleteProject()
+    /**
+     * Supprime une entrée dans la table projectuser
+     * @access private
+     *
+     * @return void
+     */
+    private function deleteProjectUser()
+    {
+        $query = 'delete from projectuser
+                where projectid = :projectid';
+
+        $result = $this->conn->prepare($query);
+
+        $result->bindValue(':projectid', $this->projectid, PDO::PARAM_INT);
+
+        $result->execute()  or die ($this->ErrorSQL($result));
+
+        return;
+
+    } //deleteProjectUser()
 
     /**
      *  ErrorSQL
