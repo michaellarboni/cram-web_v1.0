@@ -6,7 +6,7 @@ session_start();
 
 $body = json_decode(file_get_contents('php://input'),true);
 
-debug($body);
+var_dump($body);
 
 if ($_SESSION ['ADMIN'] == true)
 {
