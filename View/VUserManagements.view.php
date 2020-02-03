@@ -71,6 +71,10 @@ class VUserManagements
     [class*="col-"]{
         text-align: center;
     }
+    .row{
+        margin-left:0;
+        margin-right:0;
+    }
     .divProject{
         margin-top: 50px;
         margin-bottom: 50px;
