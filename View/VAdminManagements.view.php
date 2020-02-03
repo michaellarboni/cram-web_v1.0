@@ -286,11 +286,12 @@ class VAdminManagements
                                     </button>
                                 </div>
                                 <div class="modal-body mx-3">
+                                    <!--Nom du projet-->
                                     <div class="md-form mb-5">
                                         <label data-error="wrong" data-success="right" for="projectname'.$val['projectid'].'">'.$lang['projectname'].'</label>
                                         <input type="text" id="projectname'.$val['projectid'].'" name="projectname" class="form-control validate" value="'.$val['projectname'].'">
                                     </div>
-                            
+                                    <!--Full project name-->
                                     <div class="md-form mb-5">
                                          <label data-error="wrong" data-success="right" for="projectParent'.$val['projectid'].'">'.$lang['parent'].'</label>
                                         <select type="text" id="projectparentid'.$val['projectid'].'" name="projectparentid" class="form-control validate">
@@ -298,12 +299,18 @@ class VAdminManagements
                                             '.$optionsProjects.'
                                         </select>
                                     </div>
-
+                                    <!-- Ajout d\'un manager-->
+                                    <div class="md-form mb-5">
+                                        <label data-error="wrong" data-success="right" for="projectname'.$val['projectid'].'">'.$lang['addManager'].'</label>
+                                        <span class="autocomplete-select"></span>
+                                    </div>
+                                    <!-- Date de fin de projet-->
                                     <div class="md-form mb-5">
                                         <label data-error="wrong" data-success="right" for="projectenddate'.$val['projectid'].'">'.$lang['projectEndDate'].'</label>
                                         <input type="date" id="projectenddate'.$val['projectid'].'" name="projectenddate" class="form-control" value="'.$val['projectenddate'].'">
                                     </div>
                                 </div>
+                                <!--Bouton de validation-->
                                 <div class="modal-footer d-flex justify-content-center editInsideWrapper">
                                      <button class="btn btn-outline-secondary btn-block editInside">'.$lang['edit'].'</button>
                                 </div>
@@ -318,7 +325,7 @@ class VAdminManagements
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header text-center">
-                            <h4 class="modal-title w-100 font-weight-bold text-primary">'.$lang['listingManagers'].'</h4>
+                            <h4 class="modal-title w-100 font-weight-bold text-primary">'.$lang['listingUsers'].'</h4>
                             </div>
                             <div class="modal-body mx-3">
                                 <div class="md-form mb-5">
@@ -360,6 +367,8 @@ class VAdminManagements
 <!-- MDBootstrap Datatables  -->
 <link href="../Css/datatables.min.css" rel="stylesheet">
 <link href="../Css/datatables.css" rel="stylesheet">
+<!--Select_pure-->
+<link rel="stylesheet" href="../Css/select_pure.css"/>
 
 <h3 class="card-header text-center font-weight-bold text-uppercase py-4"><?php echo $lang['managementProjects'] ?></h3>
 
@@ -410,7 +419,69 @@ class VAdminManagements
 <script src="../Js/datatables.js"></script>
 
 <script src="../Js/adminManagementProjects.js"></script>
+<script src="../Js/bundle.min.js"></script>
+<script>
+            var customIcon = document.createElement('img');
+            customIcon.src = './icon.svg';
 
+            var json_user = <?php echo json_decode($json_user, JSON_PRETTY_PRINT)?> ;
+
+            var autocomplete = new SelectPure(".autocomplete-select", {
+                options: [
+                    {
+                        label: "Barbina",
+                        value: "ba",
+                    },
+                    {
+                        label: "Bigoli",
+                        value: "bg",
+                    },
+                    {
+                        label: "Bucatini",
+                        value: "bu",
+                    },
+                    {
+                        label: "Busiate",
+                        value: "bus",
+                    },
+                    {
+                        label: "Capellini",
+                        value: "cp",
+                    },
+                    {
+                        label: "Fedelini",
+                        value: "fe",
+                    },
+                    {
+                        label: "Maccheroni",
+                        value: "ma",
+                    },
+                    {
+                        label: "Spaghetti",
+                        value: "sp",
+                    },
+                ],
+                value: ["ma"],
+                multiple: true,
+                autocomplete: true,
+                icon: "fa fa-times",
+                onChange: value => { console.log(value); },
+                classNames: {
+                    select: "select-pure__select",
+                    dropdownShown: "select-pure__select--opened",
+                    multiselect: "select-pure__select--multiple",
+                    label: "select-pure__label",
+                    placeholder: "select-pure__placeholder",
+                    dropdown: "select-pure__options",
+                    option: "select-pure__option",
+                    autocompleteInput: "select-pure__autocomplete",
+                    selectedLabel: "select-pure__selected-label",
+                    selectedOption: "select-pure__option--selected",
+                    placeholderHidden: "select-pure__placeholder--hidden",
+                    optionHidden: "select-pure__option--hidden",
+                }
+            });
+</script>
 <?php
 
     } //showProjectsManagement($_data)
