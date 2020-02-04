@@ -55,6 +55,9 @@ switch ($EX)
     case 'update_project'              : adminModifyProject('update');       break;
     case 'delete_project'              : adminModifyProject('delete');       break;
 
+    case 'formManagerProject'          : formManagerProject($_REQUEST['PROJECT_ID']);                    break;
+    case 'adminModifyManager'          : adminModifyManager();                    break;
+
     case 'insert_activity'             : adminModifyActivity('insert');      break;
     case 'update_activity'             : adminModifyActivity('update');      break;
     case 'delete_activity'             : adminModifyActivity('delete');      break;
@@ -348,6 +351,28 @@ function adminManagement($type)
 
 /**
  * fomrulaire de projet
+ * @param $projectid
+ */
+function formManagerProject($projectid)
+{
+    $_SESSION['PROJECT_ID'] = isset($_GET['PROJECT_ID']) ? $_GET['PROJECT_ID'] : $projectid;
+    $mproject = new MProject($_SESSION['PROJECT_ID']);
+
+    $data = $mproject->getAllManagers();
+    $project = $mproject->select();
+    $_SESSION['PROJECT_NAME'] = $project['projectname'];
+
+    global $content;
+
+    $content ['title']  = 'CRAM-Web';
+    $content ['class']  = 'VAdminManagements';
+    $content ['method'] = 'showFormManagerProject';
+    $content ['arg']    = $data;
+
+    return;
+}
+/**
+ * fomrulaire de projet
  */
 function formProject()
 {
@@ -507,7 +532,6 @@ function userModifyProject()
 
         userManagement();
 
-
         return;
 
     }
@@ -550,3 +574,41 @@ function userModifyActivity()
     }
 
 } //modifyActivity()
+
+/**
+ *  function modifyManager
+ */
+function adminModifyManager()
+{
+    if (isset($_SESSION['AUTORISATION']) AND ($_SESSION['AUTORISATION']) == 'deconnect' OR !isset($_SESSION['AUTORISATION']))
+    {
+        home();
+    }
+    else{
+
+        $mproject = new MProject($_SESSION['PROJECT_ID']);
+
+        if (isset($_POST['autresmanagers'])) //si on a sélectionné des managers dans la liste des autres managers
+        {
+            foreach ($_POST['autresmanagers'] as $value)
+            {
+                $mproject->addManager($value); //On associe ces managers à ce projet
+            }
+        }
+        else // sinon, soit si on a sélectionné des activités déjà associées
+        {
+            foreach ($_POST['managers'] as $value)
+            {
+                $mproject->deleteManagerProject($value); //On supprime l'association entre les managers et le projet
+            }
+        }
+
+        $projectid = $_SESSION['PROJECT_ID'];
+        formManagerProject($projectid);
+
+
+        return;
+
+    }
+
+} //adminModifyManager()

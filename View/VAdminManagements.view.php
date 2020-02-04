@@ -43,35 +43,40 @@ class VAdminManagements
         $lang = $mlanguage->arrayLang();
 
         $tr = '';
+        $display = '';
 
         foreach ($_data as $val) {
-            $useradmin       = ($val['useradmin'] == '1') ? 'yes' : 'no';
-            $checkedAdmin    = ($useradmin == 'yes' ) ? 'checked' : '';
-            $checkedStatut   = ($val['userstatut'] == 'valid' ) ? 'checked' : '';
+            if($val['userstatut'] == 'valid') {
 
-            $tr .= '
-                    <tr>
+                $useradmin = ($val['useradmin'] == '1') ? 'yes' : 'no';
+                $checkedAdmin = ($useradmin == 'yes') ? 'checked' : '';
+                $checkedStatut = ($val['userstatut'] == 'valid') ? 'checked' : '';
+
+                $tr .= '
+                    <tr style="display:' . $display . '">
                       <td id="' . $val['lastname'] . '" data-id="' . $val['userid'] . '">' . $val['lastname'] . '</td>
                       <td id="' . $val['name'] . '" data-id="' . $val['userid'] . '">' . $val['name'] . '</td>
                       <td id="' . $val['username'] . '" data-id="' . $val['userid'] . '">' . $val['username'] . '</td>
+                      <td id="' . $val['email'] . '" data-id="' . $val['userid'] . '"><a href="mailto:' . $val['email'] . '">' . $val['email'] . '</a></td>
                       
-                      <td><span>'.$val['userstatut'].'</span>
-                        <input id="valBtn'.$val['userid'].'" class="tgl tgl-flat setValidBtn" data-id="' . $val['userid'] . '" type = "checkbox" '.$checkedStatut.'>
-                        <label for="valBtn'.$val['userid'].'" class="tgl-btn labelStatut"> </label>
+                      <td><span>' . $val['userstatut'] . '</span>
+                        <input id="valBtn' . $val['userid'] . '" class="tgl tgl-flat setValidBtn" data-id="' . $val['userid'] . '" type = "checkbox" ' . $checkedStatut . '>
+                        <label for="valBtn' . $val['userid'] . '" class="tgl-btn labelStatut"> </label>
                       </td>
                       
-                      <td><span>'.$useradmin.'</span>
-                        <input id="admBtn'.$val['userid'].'" data-id="' . $val['userid'] . '" class="tgl tgl-flat setAdminBtn" type = "checkbox" '.$checkedAdmin.'>
-                        <label for="admBtn'.$val['userid'].'" class="tgl-btn"> </label>
+                      <td><span>' . $useradmin . '</span>
+                        <input id="admBtn' . $val['userid'] . '" data-id="' . $val['userid'] . '" class="tgl tgl-flat setAdminBtn" type = "checkbox" ' . $checkedAdmin . '>
+                        <label for="admBtn' . $val['userid'] . '" class="tgl-btn"> </label>
                       </td>
                       
-                      <td><span style="display: none">'.$val['userstartdate'].'</span>
+                      <td><span style="display: none">' . $val['userstartdate'] . '</span>
                           <div class="container">
-                            <input class="col inputDate" type="date" id="userstartdate" name="userstartdate" class="form-control" value="'.$val['userstartdate'].'" style="cursor: pointer" >
-                            <button class="col btn btn-primary btn-rounded btn-sm setValidDate hidden" data-id="'.$val['userid'].'">'.$lang['changeDate'].'</button>
+                            <input class="col inputDate" type="date" id="userstartdate" name="userstartdate" class="form-control" value="' . $val['userstartdate'] . '" style="cursor: pointer" >
+                            <button class="col btn btn-primary btn-rounded btn-sm setValidDate hidden" data-id="' . $val['userid'] . '">' . $lang['changeDate'] . '</button>
                           </div>
                       </td>
                     </tr>';
+            }
         }
 ?>
 
@@ -90,6 +95,7 @@ class VAdminManagements
                 <th class="col-md-3"><?php echo $lang['lastName']?></th>
                 <th class="col-md-3"><?php echo $lang['name']?></th>
                 <th class="col-md-3"><?php echo $lang['username']?></th>
+                <th class="col-md-3">Email</th>
                 <th class="col-md-3"><?php echo $lang['statut']?></th>
                 <th class="col-md-2"><?php echo $lang['admin']?></th>
                 <th class="col-md-3"><?php echo $lang['startDate']?></th>
@@ -159,7 +165,7 @@ class VAdminManagements
              * colonne manager
              */
 
-            // Retourne les infos du manager
+            // Retourne les infos des managers associés au projet
             $managerNameProject = $mproject->managerNameProject();
             // si il y a au moins 2 managers on affiche ' [...]'
             $plus = (isset($managerNameProject[1]['lastname'])) ? ' [...]' : '';
@@ -167,29 +173,15 @@ class VAdminManagements
             if (isset($managerNameProject[0]['lastname']) == null) {
                 $name = isset($managerNameProject[0]['username']) ? $managerNameProject[0]['username'] : '';
             } else {
-                $name = ucfirst(strtolower($managerNameProject[0]['lastname']));
+                $name = $managerNameProject[0]['lastname'];
             }
             $managersBtn = ($managerNameProject) ?
-                '<div><button class="btn-secondary btn-rounded btn-sm" data-toggle="modal" data-target="#modalListManagers' . $val['projectid'] . '">' . $name . $plus . '</button></div>' : '';
+                '<div><button class="btn-secondary btn-rounded btn-sm" data-toggle="modal" data-target="#modalListManagers' . $val['projectid'] . '">' . $name . $plus . '</button></div>' : '<a href="../Php/index.php?EX=formManagerProject&amp;PROJECT_ID='.$val['projectid'].'">'.$lang['add'].'</a>';
 
             // boucle sur les noms des managers pour creation element <li>
             $managerList = '';
             foreach ($managerNameProject as $val1) {
                 $managerList .= ($val1['name'] == null) ? '<li>' . $val1['username'] . '</li>' : '<li>' . $val1['lastname'] . ' ' . $val1['name'] . '</li>';
-            }
-
-            // boucle sur la liste complete des users
-            //todo remplacer username par lastname.name (si bdd purgée des users non LDAP)
-            //todo permettre la suppression et modification des managers existants
-            foreach ($data_usersList as $val1){
-                $userid = $val1['userid'];
-                $username = $val1['username'];
-                $selected = '';
-                foreach ($managerNameProject as $val2) {
-                    $selected =  ($userid == $val2['userid']) ? 'selected="selected"' : '';
-                }
-                $optionsManager .= '<option '.$selected.' name="'.$username.'" value="'.$userid.'">'.$username.'</option>';
-
             }
 
             /**
@@ -217,7 +209,7 @@ class VAdminManagements
             /**
              * pour le formulaire d'edition
              */
-            $optionsProjects = '';
+            $optionsProjects = ''; //select fullname
             // boucle sur la liste complete des projets
             // verifie si le projet est le meme que celui du parent du projet actuel et ajoute un selected pour l'option
             foreach ($data_projectsList as $val2) {
@@ -239,6 +231,9 @@ class VAdminManagements
             /**
              *
              */
+
+            $deleteBtn = ($usernameTaskProject) ? '<button class="btn btn-rounded btn-sm"><i class="fas fa-times ml-1"> </i></button>' : '<button class="btn btn-danger btn-sm btn-rounded buttonDelete" data-toggle="modal" data-target="#modalDelete'.$val['projectid'].'" '.$disabled.'><i class="fas fa-times ml-1"></i></button>';
+
             $tr .= '
                     <tr>
                       <td>' . $val['projectname'] . '</td>
@@ -247,7 +242,7 @@ class VAdminManagements
                       <td>'.$managersBtn.'</td>
                       <td>'.$userBtn.'</td>
                       <td>
-                         <button class="btn btn-danger btn-sm btn-rounded buttonDelete" data-toggle="modal" data-target="#modalDelete'.$val['projectid'].'" '.$disabled.'><i class="fas fa-times ml-1"></i></button>
+                          '.$deleteBtn.'
                           <button class="btn btn-info btn-rounded btn-sm buttonEdit" data-toggle="modal" data-target="#modalEdit'.$val['projectid'].'"><i class="fas fa-pencil-square-o ml-1"></i></button>
                       </td>
                     </tr>';
@@ -348,7 +343,7 @@ class VAdminManagements
                                     </ul>
                                 </div>
                                 <div>
-                                    <p class="text-center"><a href="../Php/index.php?EX=formManagerProject&amp;PROJECT_ID='.$val['projectid'].'">Ajouter ou supprimer un manager</a></p>
+                                    <p class="text-center"><a href="../Php/index.php?EX=formManagerProject&amp;PROJECT_ID='.$val['projectid'].'">'.$lang['modifyManager'].'</a></p>
                                 </div>  
                             </div>                                          
                         </div>
@@ -536,7 +531,6 @@ class VAdminManagements
             } else {
                 $name = $usernameTaskActivity[0]['lastname'];
             }
-            $userBtn = ($usernameTaskActivity) ? '<div><button class="btn-secondary btn-rounded btn-sm" data-toggle="modal" data-target="#modalListUsers'.$val['activityid'].'">'.$name.$plus.'</button></div>' : '';
 
             // boucle sur les noms des utilisateurs pour creation element <li>
             $activityuser = '';
@@ -550,17 +544,20 @@ class VAdminManagements
             // construit la chaine de caractère a afficher
             $disabled     = ($usernameTaskActivity) ? 'disabled' : '';
 
+            $userBtn = ($usernameTaskActivity) ? '<div><button class="btn-secondary btn-rounded btn-sm" data-toggle="modal" data-target="#modalListUsers'.$val['activityid'].'">'.$name.$plus.'</button></div>' : '';
+            $deleteBtn = ($usernameTaskActivity) ? '<button class="btn btn-rounded btn-sm"><i class="fas fa-times ml-1"> </i></button>' : '<button class="btn btn-danger btn-sm btn-rounded buttonDelete" data-toggle="modal" data-target="#modalDelete'.$activityid.'" '.$disabled.'><i class="fas fa-times ml-1"> </i></button>';
+
             $tr .= ' <tr>
                        <td>' . $activityname . '</td>
                        <td>' . $userBtn . '</td>
                          <td>
-                            <button class="btn btn-danger btn-sm btn-rounded buttonDelete" data-toggle="modal" data-target="#modalDelete'.$activityid.'" '.$disabled.'><i class="fas fa-times ml-1"> </i></button>
+                            '.$deleteBtn.'
                             <button class="btn btn-info btn-rounded btn-sm buttonEdit" data-toggle="modal" data-target="#modalEdit'.$activityid.'"><i class="fas fa-pencil-square-o ml-1"> </i></button>
                          </td>
                      </tr>';
 
-            $divModalDelete .= '
-                <!-- Formulaire de suppression-->
+            $divModalDelete .= ($usernameTaskActivity) ?'' : '
+                <!-- Formulaire de suppression-->              
                 <div class="modal fade" id="modalDelete'.$activityid.'" tabindex="-1" role="dialog" aria-labelledby="modalDelete'.$activityid.'" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -713,7 +710,7 @@ class VAdminManagements
     } //showActivitiesManagement($_data)
 
     /**
-     *  Formulaire project
+     *  Formulaire d'ajout de projet
      */
     public function showFormProject()
     {
@@ -775,5 +772,146 @@ class VAdminManagements
 <?php
         return;
     } //formProject()
+
+    /**
+     * Ajout de manager pour un projet
+     * @access public
+     *
+     * @param $_data
+     * @return void
+     */
+    public function showFormManagerProject($_data)
+    {
+        //objet language
+        $mlanguage = new MLanguage(isset($_SESSION['LANGUAGE']) ? $_SESSION['LANGUAGE'] : 'fr' );
+        //tableau de langue associé
+        $lang = $mlanguage->arrayLang();
+
+        // variables d'option
+        $optionsManagers = '';
+        $optionsOthers  = '';
+
+        // Parcour le tableau et propose les options
+        foreach ($_data as $value)
+        {
+            if ($value['flag'] == true){
+                $name = (isset($value['lastname']) != null) ? $value['lastname'].' '.$value['name'] : $value['username'];
+                $optionsManagers .= "<option value=".$value['userid'].">".$name."</option>";
+            }else{
+                $name = (isset($value['lastname']) != null) ? $value['lastname'].' '.$value['name'] : $value['username'];
+                $optionsOthers .= "<option value=" . $value['userid'] . ">" . $name. "</option>";
+            }
+        }
+
+        ?>
+
+        <style>
+            [class*="col-"]{
+                text-align: center;
+            }
+            .row{
+                margin: 0;
+            }
+            .divProject{
+                margin-top: 50px;
+                margin-bottom: 50px;
+            }
+            select, input{
+                width: 100%;
+                margin-top: 5px;
+                margin-bottom: 5px;
+
+            }
+        </style>
+
+        <script src="../Js/adminManagementManager.js"></script>
+        <script>
+            (function (w, doc,co) {
+                // http://stackoverflow.com/questions/901115/get-query-string-values-in-javascript
+                var u = {},
+                    e,
+                    a = /\+/g,  // Regex for replacing addition symbol with a space
+                    r = /([^&=]+)=?([^&]*)/g,
+                    d = function (s) { return decodeURIComponent(s.replace(a, " ")); },
+                    q = w.location.search.substring(1),
+                    v = '2.0.3';
+
+                while (e = r.exec(q)) {
+                    u[d(e[1])] = d(e[2]);
+                }
+
+                if (!!u.jquery) {
+                    v = u.jquery;
+                }
+
+                doc.write('<script src="https://ajax.googleapis.com/ajax/libs/jquery/'+v+'/jquery.min.js">' + "<" + '/' + 'script>');
+                co.log('\nLoading jQuery v' + v + '\n');
+            })(window, document, console);
+        </script>
+        <script src="../Js/jquery.quicksearch.js"></script>
+        <script>
+            $(function () {
+
+                $("#autresManagersSearch").quicksearch("#autresmanagers option", {
+                    noResults: "#noResultMessage3"
+                });
+                $("#managersSearch").quicksearch("#managers option", {
+                    noResults: "#noResultMessage4"
+                });
+            });
+        </script>
+
+        <div class="container border divProject">
+            <form action ="../Php/index.php?EX=adminModifyManager&amp;PROJECT_ID=<?php echo $_SESSION['PROJECT_ID']?>" name="formManager" class="well" method="post">
+                <h4 class="text-center"><?php echo $lang['project'].': '.$_SESSION['PROJECT_NAME']?></h4>
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <!-- Liste des Managers -->
+                        <h4><?php echo $lang['selectManagers']?></h4>
+                        <input type="text" id="autresManagersSearch" name="search" placeholder="<?php echo $lang['findManager']?>"/>
+                        <select size="15" id="autresmanagers" name="autresmanagers[]" multiple="multiple" onchange="choixLesManagers()">
+                            <?php echo $optionsOthers?>
+                        </select>
+                        <div id="noResultMessage3" class="no-results-container">
+                            <?php echo $lang['noReresults']?>
+                        </div>
+                    </div>
+
+                    <div class="row col-4">
+                        <div class="row container-fluid align-content-center">
+                            <div class="col-lg-12">
+                                <!-- Bouton pour associer de nouveaux Managers au projet-->
+                                <button name="ajout" class="btn col-md-6" type="submit" disabled><i class="fa fa-arrow-right" style="font-size:36px;color:green"></i></button>
+                            </div>
+                            <div class="col-lg-12">
+                                <!-- Bouton pour ne plus associer des Managers au projet -->
+                                <button name="suppression" class="btn col-md-6" type="submit" disabled><i class="fa fa-arrow-left" style="font-size:36px;color:red"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <!--Liste des Managers associées au projet -->
+                        <h4> <?php echo $lang['currentManagers']?></h4>
+                        <input type="text" id="managersSearch" name="search" placeholder="<?php echo $lang['findManager']?>"/>
+                        <select size="15" id="managers" name="managers[]" multiple="multiple" onchange="choixManagers()">
+                            <?php echo $optionsManagers?>
+                        </select>
+                        <div id="noResultMessage4" class="no-results-container">
+                            <?php echo $lang['noReresults']?>
+                        </div>
+                    </div>
+
+                </div><!--<div class="row">-->
+            </form>
+            <p class="text-center"><a class="btn btn-secondary" href="../Php/index.php?EX=adminManagementProjects"><?php echo $lang['return']?></a></p>
+        </div>
+
+        <?php
+
+        return;
+
+    } //showFormManagerProject($_data)
 
 } // VAdminManagements

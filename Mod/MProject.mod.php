@@ -188,17 +188,18 @@ class MProject
 
     /**
      * deleteManagerProject
-     * @param $projectid
+     * @param $userid
      * @return void
      */
-    function deleteManagerProject($projectid)
+    function deleteManagerProject($userid)
         {
             $query = 'delete from manager
-                where projectid = :projectid';
+                where projectid = :projectid and userid = :userid';
 
             $result = $this->conn->prepare($query);
 
-            $result->bindValue(':projectid', $projectid, PDO::PARAM_INT);
+            $result->bindValue(':projectid', $this->projectid, PDO::PARAM_INT);
+            $result->bindValue(':userid', $userid, PDO::PARAM_INT);
 
             $result->execute()  or die ($this->ErrorSQL($result));
 
