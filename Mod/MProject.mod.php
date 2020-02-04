@@ -163,6 +163,50 @@ class MProject
     } // managerNameProject()
 
     /**
+     * addManager
+     * @param $user
+     * @return array
+     */
+    function addManager($user){
+        $query = 'insert into manager (projectid, userid)
+                  values (:projectid, :userid)';
+
+        $result = $this->conn->prepare($query);
+
+        $result->bindValue(':projectid', $this->projectid, PDO::PARAM_INT);
+        $result->bindValue(':userid', $user,PDO::PARAM_INT);
+
+        $result->execute() or die ($this->ErrorSQL($result));
+
+        $this->projectid = $this->conn->lastInsertId();
+
+        $this->value['projectid'] = $this->projectid;
+
+        return $this->value;
+    }
+
+
+    /**
+     * deleteManagerProject
+     * @param $projectid
+     * @return void
+     */
+    function deleteManagerProject($projectid)
+        {
+            $query = 'delete from manager
+                where projectid = :projectid';
+
+            $result = $this->conn->prepare($query);
+
+            $result->bindValue(':projectid', $projectid, PDO::PARAM_INT);
+
+            $result->execute()  or die ($this->ErrorSQL($result));
+
+            return;
+
+    } //deleteManagerProject
+
+    /**
      * Retourne le nom des users ayant déclaré une tache sur un projet; en fonction du projectid
      * @return mixed
      */
