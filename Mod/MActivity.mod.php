@@ -211,23 +211,24 @@ class MActivity
     } //getAllActivities($user)
 
     /**
-     *  Verifie si une activité est attribué à un utilisateur en fonction de l'id du PROJET
+     *  Verifie si une activité est attribué à un utilisateur en fonction de l'id de l'activité
      */
-    public function verifContrainte()
+    public function usernameTaskActivity()
     {
-        $query = "select userid
-                  from activityuser
+        $query = "select distinct C.username, C.name, C.lastname
+                  from task as T
+                  natural join cramuser as C
                   where activityid = :activityid";
 
         $result = $this->conn->prepare($query);
 
         $result->bindValue(':activityid', $this->activityid, PDO::PARAM_INT);
 
-        $result->execute() or die ($this->ErrorSQL($result));
+        $result->execute();
 
-        return $result->fetch();
+        return $result->fetchAll();
 
-    } //verifContrainte()
+    } //usernameTaskActivity()
 
     /**
      *  ErrorSQL
