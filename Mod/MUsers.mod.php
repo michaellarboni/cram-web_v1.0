@@ -275,6 +275,7 @@ class MUsers
                          lastname,
                          name,
                          username,
+                         email,
                          userstatut,
                          userdatestatut,
                          useradmin,
