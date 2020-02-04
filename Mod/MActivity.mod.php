@@ -172,6 +172,8 @@ class MActivity
      */
     private function delete()
     {
+        $this->deleteFromActivityUSer();
+
         $query = 'delete from activity
                 where activityid = :activityid';
 
@@ -184,6 +186,26 @@ class MActivity
         return ;
 
     } //deleteActivity()
+    /**
+     * Modifie les données d'un tuple dans la table activity
+     * @access private
+     *
+     * @return void
+     */
+    private function deleteFromActivityUSer()
+    {
+        $query = 'delete from activityuSer
+                where activityid = :activityid';
+
+        $result = $this->conn->prepare($query);
+
+        $result->bindValue(':activityid', $this->activityid, PDO::PARAM_INT);
+
+        $result->execute() or die ($this->ErrorSQL($result));
+
+        return ;
+
+    } //deleteFromActivityUSer()
 
     /**
      * Cette fonction va renvoyer un tableau de toutes les activités et leur association à
