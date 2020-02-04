@@ -204,7 +204,7 @@ class VAdminManagements
             if (isset($usernameTaskProject[0]['lastname']) == null) {
                 $name = isset($usernameTaskProject[0]['username']) ? $usernameTaskProject[0]['username'] : '';
             } else {
-                $name = ucfirst(strtolower($usernameTaskProject[0]['lastname']));
+                $name = $usernameTaskProject[0]['lastname'];
             }
             $userBtn = ($usernameTaskProject) ? '<div><button class="btn-secondary btn-rounded btn-sm" data-toggle="modal" data-target="#modalListUsers'.$val['projectid'].'">'.$name.$plus.'</button></div>' : '';
 
@@ -299,11 +299,6 @@ class VAdminManagements
                                             '.$optionsProjects.'
                                         </select>
                                     </div>
-                                    <!-- Ajout d\'un manager-->
-                                    <div class="md-form mb-5">
-                                        <label data-error="wrong" data-success="right" for="projectname'.$val['projectid'].'">'.$lang['addManager'].'</label>
-                                        <span class="autocomplete-select"></span>
-                                    </div>
                                     <!-- Date de fin de projet-->
                                     <div class="md-form mb-5">
                                         <label data-error="wrong" data-success="right" for="projectenddate'.$val['projectid'].'">'.$lang['projectEndDate'].'</label>
@@ -352,6 +347,9 @@ class VAdminManagements
                                         '.$managerList.'
                                     </ul>
                                 </div>
+                                <div>
+                                    <p class="text-center"><a href="../Php/index.php?EX=formManagerProject&amp;PROJECT_ID='.$val['projectid'].'">Ajouter ou supprimer un manager</a></p>
+                                </div>  
                             </div>                                          
                         </div>
                     </div>
@@ -424,48 +422,51 @@ class VAdminManagements
             var customIcon = document.createElement('img');
             customIcon.src = './icon.svg';
 
-            var json_user = <?php echo json_decode($json_user, JSON_PRETTY_PRINT)?> ;
+            var json_user = <?php echo json_encode($data_usersList, JSON_PRETTY_PRINT)?> ;
+            const myOptions2 = json_user;
+            const myOptions = [
+                {
+                    label: "Barbina",
+                    value: "ba",
+                },
+                {
+                    label: "Bigoli",
+                    value: "bg",
+                },
+                {
+                    label: "Bucatini",
+                    value: "bu",
+                },
+                {
+                    label: "Busiate",
+                    value: "bus",
+                },
+                {
+                    label: "Capellini",
+                    value: "cp",
+                },
+                {
+                    label: "Fedelini",
+                    value: "fe",
+                },
+                {
+                    label: "Maccheroni",
+                    value: "ma",
+                },
+                {
+                    label: "Spaghetti",
+                    value: "sp",
+                },
+            ];
 
             var autocomplete = new SelectPure(".autocomplete-select", {
-                options: [
-                    {
-                        label: "Barbina",
-                        value: "ba",
-                    },
-                    {
-                        label: "Bigoli",
-                        value: "bg",
-                    },
-                    {
-                        label: "Bucatini",
-                        value: "bu",
-                    },
-                    {
-                        label: "Busiate",
-                        value: "bus",
-                    },
-                    {
-                        label: "Capellini",
-                        value: "cp",
-                    },
-                    {
-                        label: "Fedelini",
-                        value: "fe",
-                    },
-                    {
-                        label: "Maccheroni",
-                        value: "ma",
-                    },
-                    {
-                        label: "Spaghetti",
-                        value: "sp",
-                    },
-                ],
+                options: myOptions2,
                 value: ["ma"],
                 multiple: true,
                 autocomplete: true,
                 icon: "fa fa-times",
                 onChange: value => { console.log(value); },
+                placeholder: 'Select a manager',
                 classNames: {
                     select: "select-pure__select",
                     dropdownShown: "select-pure__select--opened",
@@ -504,22 +505,57 @@ class VAdminManagements
         $divModalDelete = '';
         $divModalEdit   = '';
         $divModalAdd    = '';
+        $divModalListUsers  = '';
 
+        //boucle sur le tableau des activités et instancie les variables pour construction table
+        /**
+         * @array $_data (['activityid'],
+         *                ['activityname'])
+         */
         foreach ($_data as $val) {
 
             $activityid   = $val['activityid'];
             $activityname = $val['activityname'];
-            $mactivity = new MActivity($activityid);
-            $activityuser  = $mactivity->verifContrainte();
-            // construit la chaine de caractère a afficher
-            $disabled     = ($activityuser['userid']) ? 'disabled' : '';
 
+            $mactivity = new MActivity($activityid);
+
+            /**
+             * colonne utilisateur actifs
+             * @array $usernameTaskActivity // ['username']
+             *                              // ['name']
+             *                              // ['lastname']
+             */
+
+            //retourne les noms des utilisateurs ayant declarés une tache sur l'activité et crée un boutton liste
+            $usernameTaskActivity = $mactivity->usernameTaskActivity();
+            // si il y a au moins 2 users on affiche ' [...]'
+            $plus = (isset($usernameTaskActivity[1]['lastname'])) ? ' [...]' : '';
+            // si le nom de famille (lastname) n'est pas connu, on affiche son username
+            if (isset($usernameTaskActivity[0]['lastname']) == null) {
+                $name = isset($usernameTaskActivity[0]['username']) ? $usernameTaskActivity[0]['username'] : '';
+            } else {
+                $name = $usernameTaskActivity[0]['lastname'];
+            }
+            $userBtn = ($usernameTaskActivity) ? '<div><button class="btn-secondary btn-rounded btn-sm" data-toggle="modal" data-target="#modalListUsers'.$val['activityid'].'">'.$name.$plus.'</button></div>' : '';
+
+            // boucle sur les noms des utilisateurs pour creation element <li>
+            $activityuser = '';
+            foreach ($usernameTaskActivity as $val1) {
+                $activityuser .= ($val1['name'] == null) ? '<li>' . $val1['username'] . '</li>' : '<li>' . $val1['lastname'] . ' ' . $val1['name'] . '</li>';
+            }
+
+            /**
+             *
+             */
+            // construit la chaine de caractère a afficher
+            $disabled     = ($usernameTaskActivity) ? 'disabled' : '';
 
             $tr .= ' <tr>
                        <td>' . $activityname . '</td>
+                       <td>' . $userBtn . '</td>
                          <td>
-                            <button class="btn btn-danger btn-sm btn-rounded buttonDelete" data-toggle="modal" data-target="#modalDelete'.$activityid.'" '.$disabled.'>'.$lang['delete'].'<i class="fas fa-times ml-1"> </i></button>
-                            <button class="btn btn-info btn-rounded btn-sm buttonEdit" data-toggle="modal" data-target="#modalEdit'.$activityid.'">'.$lang['edit'].'<i class="fas fa-pencil-square-o ml-1"> </i></button>
+                            <button class="btn btn-danger btn-sm btn-rounded buttonDelete" data-toggle="modal" data-target="#modalDelete'.$activityid.'" '.$disabled.'><i class="fas fa-times ml-1"> </i></button>
+                            <button class="btn btn-info btn-rounded btn-sm buttonEdit" data-toggle="modal" data-target="#modalEdit'.$activityid.'"><i class="fas fa-pencil-square-o ml-1"> </i></button>
                          </td>
                      </tr>';
 
@@ -596,6 +632,26 @@ class VAdminManagements
                         </form>
                     </div>
                 </div>';
+
+            $divModalListUsers .= '
+                <!-- Liste des utilisateurs de l\'activité-->
+                <div class="modal fade" id="modalListUsers'.$val['activityid'].'" tabindex="-1" role="dialog" aria-labelledby="modalListUsers" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header text-center">
+                            <h4 class="modal-title w-100 font-weight-bold text-primary">'.$lang['listingUsers'].'</h4>
+                            </div>
+                            <div class="modal-body mx-3">
+                                <div class="md-form mb-5">
+                                    <ul>
+                                        '.$activityuser.'
+                                    </ul>
+                                </div>
+                            </div>                                          
+                        </div>
+                    </div>
+                </div>';
+
         }
 
         ?>
@@ -618,6 +674,7 @@ class VAdminManagements
         echo $divModalEdit;
         echo $divModalDelete;
         echo $divModalAdd;
+        echo $divModalListUsers;
         ?>
     </div>
 
@@ -626,6 +683,7 @@ class VAdminManagements
         <thead>
             <tr>
                 <th class="text-center"><?php echo $lang['activitieName']?></th>
+                <th class="text-center"><?php echo $lang['activeUsers']?></th>
                 <th class="text-center"><?php echo $lang['edit']?></th>
             </tr>
         </thead>
