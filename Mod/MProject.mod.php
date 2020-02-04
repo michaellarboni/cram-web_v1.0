@@ -252,6 +252,30 @@ class MProject
 
     } //getAllProjects($user)
 
+
+    /**
+     * Renvoie un tableau de tous les users et du lien qu'ils ont avec
+     * le projet : true si le projet passé en paramètre est lié à l'utilisateur, sinon false
+     * @return mixed
+     */
+    function getAllManagers()
+    {
+        $query = "  select u.userid, u.username, U.lastname, U.name,
+                    case when count(m.projectid)>=1 then TRUE else FALSE end as flag
+                    from cramuser as u
+                    left join manager as m on m.userid=u.userid and m.projectid = :projectid 
+                    group by u.userid";
+
+        $result = $this->conn->prepare($query);
+
+        $result->bindValue(':projectid', $this->projectid, PDO::PARAM_INT);
+
+        $result->execute();
+
+        return $result->fetchAll();
+
+    } //getAllManagers()
+
     /**
      *  Verifie si un projet est attribué à un utilisateur en fonction de l'id du PROJET
      */
