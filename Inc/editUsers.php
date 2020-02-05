@@ -62,9 +62,6 @@ function setDate($data)
     $dateB = mktime(0,0,0,$arrayB[2],$arrayB[1],$arrayB[0]);
 
     if($dateA < $dateB){
-        echo "la date d'entrée doit être antérieur ou égale au: " .$firstTaskDate['min']." date de 1ère tache de l'utilisateur";
-    }
-    else{
         $musers->setDate($data['userstartdate']);
         http_response_code(201);
     }
