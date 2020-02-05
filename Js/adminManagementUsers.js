@@ -105,9 +105,7 @@ Array.from( // crée un array depuis la nodelist de button
                     this.classList.add("hidden");
                 }
                 else{
-                    alert("la date d'entrée doit être antérieur ou égale à la date de 1ère tache de l'utilisateur");
-                    this.classList.add("hidden");
-                    //todo afficher la date de la plus ancienne tache
+                    alert("L'utilisateur a déclaré une taĉhe à une date antérieure");
                 }
             }).catch((error) => alert(error));
 
