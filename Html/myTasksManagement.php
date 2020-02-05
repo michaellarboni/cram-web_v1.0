@@ -68,8 +68,6 @@ foreach($data['activities'] as $val)
     }
 ?>
 <script src="../Js/calendrier.js"></script>
-<!--<script src='../libs/fullcalendar/dist/lang/fr.js'></script>-->
-<!--<script src='../libs/fullcalendar/dist/lang/en-gb.js'></script>-->
 
 <!-- affichage pour le formulaire d'entree sur le ou les jour effectué -->
 <div id="board" class="row-fluid">
