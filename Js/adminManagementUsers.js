@@ -77,7 +77,7 @@ Array.from( // crée un array depuis la nodelist de button
     });
 
 /**
- *  gère le bouton date
+ *  gère le bouton modifier date
  */
 Array.from( // crée un array depuis la nodelist de button
     document.querySelectorAll('.setValidDate') // selectionne tous les boutons (retourne une nodelist)
@@ -103,8 +103,7 @@ Array.from( // crée un array depuis la nodelist de button
             }).then((response) => { // si le serveur repond ok
                 if (response.status === 201) {
                     this.classList.add("hidden");
-                }
-                else{
+                } else {
                     alert("L'utilisateur a déclaré une taĉhe à une date antérieure");
                 }
             }).catch((error) => alert(error));
@@ -113,7 +112,7 @@ Array.from( // crée un array depuis la nodelist de button
     });
 
 /**
- *  gère le bouton date
+ *  au changement d'une date, le bouton 'Modifier date' apparait
  */
 Array.from( // crée un array depuis la nodelist de button
     document.querySelectorAll('.inputDate') // selectionne tous les boutons (retourne une nodelist)
@@ -121,29 +120,5 @@ Array.from( // crée un array depuis la nodelist de button
     function (input) { // pour chaque bouton dans l'array
         input.addEventListener('change', function (e) {
             this.parentNode.querySelector('button').classList.remove("hidden");
-            // this.parentNode.querySelector('span').innerHTML = 'attention';
         });
-        // button.addEventListener('click', function (e) { //ajoute un callback sur le click
-        //     let body = { // construit le body de la requete post
-        //         action: 'setDate',
-        //         data: {
-        //             id: this.dataset.id,
-        //             userstartdate: document.querySelector('#userstartdate').value,
-        //         }
-        //     };
-        //
-        //     fetch('../Php/editUsers.php', { // fait un appel asynchrone au serveur
-        //         method: 'POST',
-        //         cache: "no-cache",
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //             'accepts': 'text/plain'
-        //         },
-        //         body: JSON.stringify(body) // converti l'objet javascript body en json
-        //     }).then((response) => { // si le serveur repond ok
-        //         if (response.status === 201) {
-        //         }
-        //     }).catch((error) => alert(error));
-        //
-        // });
     });
