@@ -429,7 +429,7 @@ class MUsers
                     and TE.label = :label
                     and T.taskdate between :dateBegin and :dateEnd
                     group by P.projectname , U.username , P.projectid , PU.userid
-                    order by P.projectname, userid";
+                    order by P.projectname, PU.userid";
         $result = $this->conn->prepare($query);
         $result->bindParam(':label',$service,PDO::PARAM_STR);
         $result->bindParam(':dateBegin',$date_begin,PDO::PARAM_STR);

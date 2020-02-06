@@ -86,26 +86,8 @@ class MManager
 
         $this->projectid = $this->conn->lastInsertId();
 
-//        return $this->value;
         return ;
     }
 
-    /**
-     *  ErrorSQL
-     * @param $result
-     * @return array
-     */
-    private function ErrorSQL($result)
-    {
-        // Récupère le tableau des erreurs
-        $error = $result->errorInfo();
-
-        echo 'TYPE_ERROR = ' . $error[0] . '<br />';
-        echo 'CODE_ERROR = ' . $error[1] . '<br />';
-        echo 'MSG_ERROR = ' . $error[2] . '<br />';
-
-        return $error;
-
-    }
 } // MManager
 

@@ -74,19 +74,6 @@ class MDates
 
     } // SetIdUser($id_user)
 
-/*    //Retourne l'id de l'utilisateur passé en paramètre, et permet sa connexion
-    public function connexionBDD($user)
-    {
-        $pdo = PdoBdd::getPdoBdd();
-        $stmt = $pdo->prepare("SELECT userid, username FROM cramuser
-                               WHERE username = :user");
-        $stmt->bindParam(':user', $user);
-        $stmt->execute();
-        $rs = $stmt->fetchAll();
-        foreach ($rs as $value)
-        return array("id" => $value['userid'], "username" => $value['username']);
-    } //connexionBDD($user)*/
-
     /**
      * Retourne le nombre de congé pris par rapport à une période daté par user
      * @param $id_user
