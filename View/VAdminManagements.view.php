@@ -44,38 +44,59 @@ class VAdminManagements
 
         $tr = '';
         $display = '';
+        $btnFilter = '';
 
         foreach ($_data as $val) {
-            if($val['userstatut'] == 'valid') {
+            $useradmin = ($val['useradmin'] == '1') ? 'yes' : 'no';
+            $checkedAdmin = ($useradmin == 'yes') ? 'checked' : '';
+            $checkedStatut = ($val['userstatut'] == 'valid') ? 'checked' : '';
+            $TR = '
+                            <tr style="display:' . $display . '">
+                              <td id="' . $val['lastname'] . '" data-id="' . $val['userid'] . '">' . $val['lastname'] . '</td>
+                              <td id="' . $val['name'] . '" data-id="' . $val['userid'] . '">' . $val['name'] . '</td>
+                              <td id="' . $val['username'] . '" data-id="' . $val['userid'] . '">' . $val['username'] . '</td>
+                              <td id="' . $val['email'] . '" data-id="' . $val['userid'] . '"><a href="mailto:' . $val['email'] . '">' . $val['email'] . '</a></td>
+                              
+                              <td><span>' . $val['userstatut'] . '</span>
+                                <input id="valBtn' . $val['userid'] . '" class="tgl tgl-flat setValidBtn" data-id="' . $val['userid'] . '" type = "checkbox" ' . $checkedStatut . '>
+                                <label for="valBtn' . $val['userid'] . '" class="tgl-btn labelStatut"> </label>
+                              </td>
+                              
+                              <td><span>' . $useradmin . '</span>
+                                <input id="admBtn' . $val['userid'] . '" data-id="' . $val['userid'] . '" class="tgl tgl-flat setAdminBtn" type = "checkbox" ' . $checkedAdmin . '>
+                                <label for="admBtn' . $val['userid'] . '" class="tgl-btn"> </label>
+                              </td>
+                              
+                              <td><span style="display: none">' . $val['userstartdate'] . '</span>
+                                  <div class="container">
+                                    <input class="col inputDate" type="date" id="userstartdate" name="userstartdate" class="form-control" value="' . $val['userstartdate'] . '" style="cursor: pointer" >
+                                    <button class="col btn btn-primary btn-rounded btn-sm setValidDate hidden" data-id="' . $val['userid'] . '">' . $lang['changeDate'] . '</button>
+                                  </div>
+                              </td>
+                            </tr>';
 
-                $useradmin = ($val['useradmin'] == '1') ? 'yes' : 'no';
-                $checkedAdmin = ($useradmin == 'yes') ? 'checked' : '';
-                $checkedStatut = ($val['userstatut'] == 'valid') ? 'checked' : '';
-
-                $tr .= '
-                    <tr style="display:' . $display . '">
-                      <td id="' . $val['lastname'] . '" data-id="' . $val['userid'] . '">' . $val['lastname'] . '</td>
-                      <td id="' . $val['name'] . '" data-id="' . $val['userid'] . '">' . $val['name'] . '</td>
-                      <td id="' . $val['username'] . '" data-id="' . $val['userid'] . '">' . $val['username'] . '</td>
-                      <td id="' . $val['email'] . '" data-id="' . $val['userid'] . '"><a href="mailto:' . $val['email'] . '">' . $val['email'] . '</a></td>
-                      
-                      <td><span>' . $val['userstatut'] . '</span>
-                        <input id="valBtn' . $val['userid'] . '" class="tgl tgl-flat setValidBtn" data-id="' . $val['userid'] . '" type = "checkbox" ' . $checkedStatut . '>
-                        <label for="valBtn' . $val['userid'] . '" class="tgl-btn labelStatut"> </label>
-                      </td>
-                      
-                      <td><span>' . $useradmin . '</span>
-                        <input id="admBtn' . $val['userid'] . '" data-id="' . $val['userid'] . '" class="tgl tgl-flat setAdminBtn" type = "checkbox" ' . $checkedAdmin . '>
-                        <label for="admBtn' . $val['userid'] . '" class="tgl-btn"> </label>
-                      </td>
-                      
-                      <td><span style="display: none">' . $val['userstartdate'] . '</span>
-                          <div class="container">
-                            <input class="col inputDate" type="date" id="userstartdate" name="userstartdate" class="form-control" value="' . $val['userstartdate'] . '" style="cursor: pointer" >
-                            <button class="col btn btn-primary btn-rounded btn-sm setValidDate hidden" data-id="' . $val['userid'] . '">' . $lang['changeDate'] . '</button>
-                          </div>
-                      </td>
-                    </tr>';
+            if($_SESSION['FILTER'] == 'showValid') {
+                if ($val['userstatut'] == 'valid') {
+                    $tr .= $TR;
+                    $btnFilter = '    
+                                <div class="row">
+                                    <h4>Afficher les utilisateurs inactifs</h4>
+                                    <input id="showPending" class="tgl tgl-flat setFilterBtn" type="checkbox">
+                                    <label for="showPending" class="tgl-btn"></label>
+                                </div>';
+                }
+            }else {
+                if($_SESSION['FILTER'] == 'showPending'){
+                    if ($val['userstatut'] == 'pending'){
+                        $tr.= $TR;
+                        $btnFilter = '    
+                                <div class="row">
+                                    <h4>Afficher les utilisateurs inactifs</h4>
+                                    <input id="hidePending" class="tgl tgl-flat setFilterBtn" type="checkbox" checked>
+                                    <label for="hidePending" class="tgl-btn"></label>
+                                </div>';
+                    }
+                }
             }
         }
 ?>
@@ -86,9 +107,21 @@ class VAdminManagements
 <link href="../Css/datatables.min.css" rel="stylesheet">
 <link href="../Css/datatables.css" rel="stylesheet">
 
+<script>
+    $(function() {
+        $('#showPending').click(function() {
+            window.location="../Php/index.php?EX=adminManagementUsersAll";
+        });
+        $('#hidePending').click(function() {
+            window.location="../Php/index.php?EX=adminManagementUsers";
+        });
+    });
+
+</script>
+
 <h3 class="card-header text-center font-weight-bold text-uppercase py-4"><?php echo $lang['managementUsers']?></h3>
 <div class="container-fluid card table-adminUsers">
-
+    <?php echo $btnFilter ?>
     <table id="table" class="table table-striped table-bordered" style="border-spacing:0;">
         <thead>
             <tr>
@@ -124,7 +157,6 @@ class VAdminManagements
 <?php
 
     } //showUsersManagement($_data)
-
 
     /**
      * Affichage du ProjectsManagement
@@ -579,7 +611,6 @@ class VAdminManagements
                         </div>
                     </div>
                 </div>';
-
         }
 
         ?>
@@ -636,7 +667,6 @@ class VAdminManagements
 
 <script src="../Js/adminManagementActivities.js"></script>
 <?php
-
 
     } //showActivitiesManagement($_data)
 
@@ -702,7 +732,7 @@ class VAdminManagements
 
 <?php
         return;
-    } //formProject()
+    } //showFormProject()
 
     /**
      * Ajout de manager pour un projet
