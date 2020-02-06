@@ -7,8 +7,9 @@
  */
 
 // Debuggage
-define('DEBUG', false);
-define('LDAP', true);
+define('DEBUG', true);
+// Contrôle LDAP; true ou false
+define('LDAP', false);
 
 // Connexion Base de Données
 define('DATABASE', 'pgsql:host=localhost;port=5432;dbname=cram_0');
@@ -61,19 +62,21 @@ function strip_xss(&$val)
 } // strip_xss(&$val)
 
 // Visualisation des erreurs
-if (DEBUG)
-{
+if (!DEBUG) {
+    // desactive l'affichage des erreurs
+    ini_set('display_errors', 0);
+} else {
     // Retourne toutes les erreurs
     error_reporting(E_ALL);
     // Autorise l'affichage des erreurs
     ini_set('display_errors', 1);
 
     /**
-    * Fonction de debug pour les tableaux
-    * @param array tableau à débugguer
-    *
-    * @return void
-    */
+     * Fonction de debug pour les tableaux
+     * @param array tableau à débugguer
+     *
+     * @return void
+     */
     function debug($Tab)
     {
         echo '<pre>';
@@ -84,16 +87,24 @@ if (DEBUG)
 
     } // debug($Tab)
 
+}
 
-    function ErrorSQL($result)
-    {
-    if (!DEBUG) return;
+function ErrorSQL($result)
+{
+    $error = '<div style="text-align: center;">
+                <h1>Une erreur est survenue, contacter un administrateur</h1>
+                <a href="../Php/index.php?EX=myTasksManagement">Retour</a>
+              </div>';
 
+    if (!DEBUG) return $error;
+
+    // Récupère le tableau des erreurs
     $error = $result->errorInfo();
 
-    debug($error);
+    echo 'TYPE_ERROR = ' . $error[0] . '<br />';
+    echo 'CODE_ERROR = ' . $error[1] . '<br />';
+    echo 'MSG_ERROR = ' . $error[2] . '<br />';
 
-    return;
+    return $error;
 
-    } // ErrorSQL($result)
-}
+} // ErrorSQL($result)
