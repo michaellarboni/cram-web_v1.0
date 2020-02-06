@@ -128,7 +128,8 @@ class MUsers
         $query = 'update cramuser
                      set name = :name,
                          lastname = :lastname,
-                         email = :email
+                         email = :email,
+                         userstatut = :userstatut
                    where username = :username';
 
         $result = $this->conn->prepare($query);
@@ -137,7 +138,9 @@ class MUsers
         $result->bindParam(':name', $this->value['name'],PDO::PARAM_STR);
         $result->bindParam(':lastname', $this->value['lastname'],PDO::PARAM_STR);
         $result->bindParam(':email', $this->value['email'],PDO::PARAM_STR);
-        $result->execute()or die ($this->ErrorSQL($result)) ;
+        $result->bindParam(':userstatut', $this->value['userstatut'],PDO::PARAM_STR);
+
+        $result->execute()or die (ErrorSQL($result)) ;
     }
     /**
      * Requete pour changer les droits d'admin en fonction de l'userid
@@ -286,7 +289,7 @@ class MUsers
 
 
         $result = $this->conn->prepare($query);
-        $result->execute() or die ($this->ErrorSQL($result));
+        $result->execute() or die (ErrorSQL($result));
 
         return $result->fetchAll();
 
@@ -306,7 +309,7 @@ class MUsers
 
         $result->bindValue(':userid', $this->id_user, PDO::PARAM_INT);
 
-        $result->execute() or die ($this->ErrorSQL($result));
+        $result->execute() or die (ErrorSQL($result));
 
         return $result->fetch();
 
@@ -323,7 +326,7 @@ class MUsers
 
         $result = $this->conn->prepare($query);
 
-        $result->execute() or die ($this->ErrorSQL($result));
+        $result->execute() or die (ErrorSQL($result));
 
         return $result->fetchAll();
 
@@ -983,24 +986,6 @@ class MUsers
         {
             $this->addMyTask($user, $date, $am, $off, $idProject, $idActivity, $comment);
         }
-    }
-
-    /**
-     *  ErrorSQL
-     * @param $result
-     * @return array
-     */
-    private function ErrorSQL($result)
-    {
-        // Récupère le tableau des erreurs
-        $error = $result->errorInfo();
-
-        echo 'TYPE_ERROR = ' . $error[0] . '<br />';
-        echo 'CODE_ERROR = ' . $error[1] . '<br />';
-        echo 'MSG_ERROR = ' . $error[2] . '<br />';
-
-        return $error;
-
     }
 
 } // MUsers
