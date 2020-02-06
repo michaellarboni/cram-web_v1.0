@@ -151,8 +151,6 @@ class VAdminManagements
         $musers = new MUsers();
         $data_usersList = $musers->selectAll();
 
-        $optionsManager = '';
-
         //boucle sur le tableau des projets et instancie les variables pour construction table
         foreach ($_data as $val) {
 
@@ -360,8 +358,6 @@ class VAdminManagements
 <!-- MDBootstrap Datatables  -->
 <link href="../Css/datatables.min.css" rel="stylesheet">
 <link href="../Css/datatables.css" rel="stylesheet">
-<!--Select_pure-->
-<link rel="stylesheet" href="../Css/select_pure.css"/>
 
 <h3 class="card-header text-center font-weight-bold text-uppercase py-4"><?php echo $lang['managementProjects'] ?></h3>
 
@@ -412,72 +408,7 @@ class VAdminManagements
 <script src="../Js/datatables.js"></script>
 
 <script src="../Js/adminManagementProjects.js"></script>
-<script src="../Js/bundle.min.js"></script>
-<script>
-            var customIcon = document.createElement('img');
-            customIcon.src = './icon.svg';
 
-            var json_user = <?php echo json_encode($data_usersList, JSON_PRETTY_PRINT)?> ;
-            const myOptions2 = json_user;
-            const myOptions = [
-                {
-                    label: "Barbina",
-                    value: "ba",
-                },
-                {
-                    label: "Bigoli",
-                    value: "bg",
-                },
-                {
-                    label: "Bucatini",
-                    value: "bu",
-                },
-                {
-                    label: "Busiate",
-                    value: "bus",
-                },
-                {
-                    label: "Capellini",
-                    value: "cp",
-                },
-                {
-                    label: "Fedelini",
-                    value: "fe",
-                },
-                {
-                    label: "Maccheroni",
-                    value: "ma",
-                },
-                {
-                    label: "Spaghetti",
-                    value: "sp",
-                },
-            ];
-
-            var autocomplete = new SelectPure(".autocomplete-select", {
-                options: myOptions2,
-                value: ["ma"],
-                multiple: true,
-                autocomplete: true,
-                icon: "fa fa-times",
-                onChange: value => { console.log(value); },
-                placeholder: 'Select a manager',
-                classNames: {
-                    select: "select-pure__select",
-                    dropdownShown: "select-pure__select--opened",
-                    multiselect: "select-pure__select--multiple",
-                    label: "select-pure__label",
-                    placeholder: "select-pure__placeholder",
-                    dropdown: "select-pure__options",
-                    option: "select-pure__option",
-                    autocompleteInput: "select-pure__autocomplete",
-                    selectedLabel: "select-pure__selected-label",
-                    selectedOption: "select-pure__option--selected",
-                    placeholderHidden: "select-pure__placeholder--hidden",
-                    optionHidden: "select-pure__option--hidden",
-                }
-            });
-</script>
 <?php
 
     } //showProjectsManagement($_data)
