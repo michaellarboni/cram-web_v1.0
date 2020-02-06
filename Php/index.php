@@ -47,6 +47,7 @@ switch ($EX)
     case 'myTasksManagement'           : myTasksManagement();                     break;
 
     case 'adminManagementUsers'        : adminManagement('Users');           break;
+    case 'adminManagementUsersAll'     : adminManagement('UsersAll');        break;
     case 'adminManagementProjects'     : adminManagement('Projects');        break;
     case 'adminManagementActivities'   : adminManagement('Activities');      break;
 
@@ -55,7 +56,7 @@ switch ($EX)
     case 'update_project'              : adminModifyProject('update');       break;
     case 'delete_project'              : adminModifyProject('delete');       break;
 
-    case 'formManagerProject'          : formManagerProject($_REQUEST['PROJECT_ID']);                    break;
+    case 'formManagerProject'          : formManagerProject(isset($_REQUEST['PROJECT_ID']));                    break;
     case 'adminModifyManager'          : adminModifyManager();                    break;
 
     case 'insert_activity'             : adminModifyActivity('insert');      break;
@@ -107,7 +108,7 @@ function ldap()
     // Eléments d'authentification LDAP
     $username = isset($_POST['username']) ? $_POST['username'] : 'null' ;
     $ldapRdn  = 'uid=' . $username . ',ou=people,dc=pytheas,dc=fr';     // DN ou RDN LDAP
-    $ldapPass = $_POST['userpwd'];
+    $ldapPass = isset($_POST['userpwd']);
 
     // Connexion au serveur LDAP
     // JCM 13/01  define(LDAP_OPT_DIAGNOSTIC_MESSAGE, 0x0032);
@@ -312,9 +313,9 @@ function myTasksManagement()
  */
 function adminManagement($type)
 {
-    if (isset($_SESSION['AUTORISATION']) AND ($_SESSION['AUTORISATION']) == 'deconnect' OR !isset($_SESSION['AUTORISATION']))
+    if (!isset($_SESSION['ADMIN']) OR (!$_SESSION['ADMIN']))
     {
-        home();
+        home("Vous avez été déconnecté");
     }
     else{
 
@@ -324,13 +325,17 @@ function adminManagement($type)
         $data      = '';
 
         switch ($type) {
-            case 'Projects'  :
+            case 'Projects':
                 $data = $mproject->selectAll();
                 break;
-            case 'Users'     :
-                $value = null;
-                $musers->setValue($value);
+            case 'Users':
+                $_SESSION['FILTER'] = 'showValid';
                 $data = $musers->selectAll();
+                break;
+            case 'UsersAll':
+                $_SESSION['FILTER'] = 'showPending';
+                $data = $musers->selectAll();
+                $type = 'Users';
                 break;
             case 'Activities':
                 $data = $mactivity->selectAll();
@@ -355,19 +360,25 @@ function adminManagement($type)
  */
 function formManagerProject($projectid)
 {
-    $_SESSION['PROJECT_ID'] = isset($_GET['PROJECT_ID']) ? $_GET['PROJECT_ID'] : $projectid;
-    $mproject = new MProject($_SESSION['PROJECT_ID']);
+    if (!isset($_SESSION['ADMIN']) OR (!$_SESSION['ADMIN']))
+    {
+        home("Vous avez été déconnecté");
+    }
+    else{
+        $_SESSION['PROJECT_ID'] = isset($_GET['PROJECT_ID']) ? $_GET['PROJECT_ID'] : $projectid;
+        $mproject = new MProject($_SESSION['PROJECT_ID']);
 
-    $data = $mproject->getAllManagers();
-    $project = $mproject->select();
-    $_SESSION['PROJECT_NAME'] = $project['projectname'];
+        $data = $mproject->getAllManagers();
+        $project = $mproject->select();
+        $_SESSION['PROJECT_NAME'] = $project['projectname'];
 
-    global $content;
+        global $content;
 
-    $content ['title']  = 'CRAM-Web';
-    $content ['class']  = 'VAdminManagements';
-    $content ['method'] = 'showFormManagerProject';
-    $content ['arg']    = $data;
+        $content ['title']  = 'CRAM-Web';
+        $content ['class']  = 'VAdminManagements';
+        $content ['method'] = 'showFormManagerProject';
+        $content ['arg']    = $data;
+    }
 
     return;
 }
@@ -376,12 +387,18 @@ function formManagerProject($projectid)
  */
 function formProject()
 {
-    global $content;
+    if (!isset($_SESSION['ADMIN']) OR (!$_SESSION['ADMIN']))
+    {
+        home("Vous avez été déconnecté");
+    }
+    else {
+        global $content;
 
-    $content ['title']  = 'CRAM-Web';
-    $content ['class']  = 'VAdminManagements';
-    $content ['method'] = 'showFormProject';
-    $content ['arg']    = '';
+        $content ['title'] = 'CRAM-Web';
+        $content ['class'] = 'VAdminManagements';
+        $content ['method'] = 'showFormProject';
+        $content ['arg'] = '';
+    }
 
     return;
 }
@@ -394,38 +411,41 @@ function formProject()
  */
 function adminModifyProject($type)
 {
-    $id_project = isset($_REQUEST['projectid']) ? $_REQUEST['projectid'] : '';
-    $mproject = new MProject($id_project);
-    $value = $_POST;
-    $value['projectid'] = $id_project;
-    if($type != 'delete'){
-        $value['projectparentid'] = (isset($_POST['projectparentid'])) ? $_POST['projectparentid'] : null;
-        $value['projectenddate']  = ($_POST['projectenddate']) ? $_POST['projectenddate'] : null;
-        $value['userid']          = (isset($_POST['managerid'])) ? $_POST['managerid'] : null;
-        $mproject->setValue($value);
-        $mproject->Modify($type);
-        if ($type == 'update'){
-            $mmanager = new MManager();
-            if (isset($_POST['managerid'])) //si on a sélectionné des projets dans la liste des autres projets
-            {
-                foreach ($_POST['managerid'] as $value['userid'])
-                {
-                    $mmanager->setValue($value);
-                    $mmanager->insert();
+    if (!isset($_SESSION['ADMIN']) OR (!$_SESSION['ADMIN']))
+    {
+        home("Vous avez été déconnecté");
+    }
+        else {
+            $id_project = isset($_REQUEST['projectid']) ? $_REQUEST['projectid'] : '';
+            $mproject = new MProject($id_project);
+            $value = $_POST;
+            $value['projectid'] = $id_project;
+            if ($type != 'delete') {
+                $value['projectparentid'] = (isset($_POST['projectparentid'])) ? $_POST['projectparentid'] : null;
+                $value['projectenddate'] = ($_POST['projectenddate']) ? $_POST['projectenddate'] : null;
+                $value['userid'] = (isset($_POST['managerid'])) ? $_POST['managerid'] : null;
+                $mproject->setValue($value);
+                $mproject->Modify($type);
+                if ($type == 'update') {
+                    $mmanager = new MManager();
+                    if (isset($_POST['managerid'])) //si on a sélectionné des projets dans la liste des autres projets
+                    {
+                        foreach ($_POST['managerid'] as $value['userid']) {
+                            $mmanager->setValue($value);
+                            $mmanager->insert();
+                        }
+                    }
+                }
+            } else {
+                if ($mproject->verifContrainte()) {
+                    echo 'impossible de supprimer le projet actif';
+                } else {
+                    $mproject->setValue($value);
+                    $mproject->Modify($type);
                 }
             }
+            adminManagement('Projects');
         }
-    }
-    else{
-        if($mproject->verifContrainte()){
-            echo 'impossible de supprimer le projet actif';
-        }
-        else{
-            $mproject->setValue($value);
-            $mproject->Modify($type);
-        }
-    }
-    adminManagement('Projects');
 
     return;
 
@@ -439,15 +459,21 @@ function adminModifyProject($type)
  */
 function adminModifyActivity($type)
 {
-    $activityid = isset($_REQUEST['activityid']) ? $_REQUEST['activityid'] : '';
-    $value = $_POST;
-    $value['activityid'] = $activityid;
+    if (!isset($_SESSION['ADMIN']) OR (!$_SESSION['ADMIN']))
+    {
+        home("Vous avez été déconnecté");
+    }
+        else {
+            $activityid = isset($_REQUEST['activityid']) ? $_REQUEST['activityid'] : '';
+            $value = $_POST;
+            $value['activityid'] = $activityid;
 
-    $mactivity = new MActivity($activityid);
-    $mactivity->setValue($value);
-    $mactivity->Modify($type);
+            $mactivity = new MActivity($activityid);
+            $mactivity->setValue($value);
+            $mactivity->Modify($type);
 
-    adminManagement('Activities');
+            adminManagement('Activities');
+        }
 
     return;
 
@@ -457,9 +483,9 @@ function reporting($type)
 {
     if (isset($_SESSION['AUTORISATION']) AND ($_SESSION['AUTORISATION']) == 'deconnect' OR !isset($_SESSION['AUTORISATION']))
     {
-        home();
+        home("Vous avez été déconnecté");
     }
-    else{
+    else {
 
         global $content;
 
@@ -482,13 +508,13 @@ function userManagement()
     {
         home();
     }
-    else{
+    else {
 
         $mproject = new MProject();
         $mactivity = new MActivity();
 
-        $data['project']  = $mproject->getAllProjects($_SESSION['ID']);;
-        $data['activity'] = $mactivity->getAllActivities($_SESSION['ID']);;
+        $data['project']  = $mproject->getAllProjects($_SESSION['ID']);
+        $data['activity'] = $mactivity->getAllActivities($_SESSION['ID']);
 
         global $content;
 
@@ -507,11 +533,11 @@ function userManagement()
  */
 function userModifyProject()
 {
-    if (isset($_SESSION['AUTORISATION']) AND ($_SESSION['AUTORISATION']) == 'deconnect' OR !isset($_SESSION['AUTORISATION']))
+    if (!isset($_SESSION['ID']))
     {
         home();
     }
-    else{
+    else {
 
         $musers = new MUsers();
 
@@ -544,11 +570,11 @@ function userModifyProject()
  */
 function userModifyActivity()
 {
-    if (isset($_SESSION['AUTORISATION']) AND ($_SESSION['AUTORISATION']) == 'deconnect' OR !isset($_SESSION['AUTORISATION']))
+    if (!isset($_SESSION['ID']))
     {
-        home();
+        home("Vous avez été déconnecté");
     }
-    else{
+    else {
 
         $musers = new MUsers();
 
@@ -580,11 +606,11 @@ function userModifyActivity()
  */
 function adminModifyManager()
 {
-    if (isset($_SESSION['AUTORISATION']) AND ($_SESSION['AUTORISATION']) == 'deconnect' OR !isset($_SESSION['AUTORISATION']))
+    if (!isset($_SESSION['ADMIN']) OR (!$_SESSION['ADMIN']))
     {
-        home();
+        home("Vous avez été déconnecté");
     }
-    else{
+    else {
 
         $mproject = new MProject($_SESSION['PROJECT_ID']);
 
