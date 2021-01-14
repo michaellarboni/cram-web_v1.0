@@ -8,7 +8,9 @@ require('../Inc/require.inc.php');
 include('../Mod/MUsers.mod.php');
 $musers = new MUsers();
 
-$ldapconn = ldap_connect("ldaps://ldap.osupytheas.fr:636");
+$host = "nom_d\'hote_a_remplacer";
+$port = 636;
+$ldapconn = ldap_connect($host":636");
 $ldaprdn  = 'ou=people,dc=pytheas,dc=fr';
 $filter   = "(uid=*)"; // * pour requeter sur tous les utilisateurs LDAP
 $these    = array("uid","sn","givenname","mail");
